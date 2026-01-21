@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <title>Projects | RJ Edwards</title>
-  <meta name="description" content="Featured projects by RJ Edwards: Tic-Tac-Toe AI, Flappy Bird AI, and a Chapter Ops Dashboard. Interactive demos + concise technical summaries." />
+  <meta name="description"
+    content="Featured projects by RJ Edwards: Tic-Tac-Toe AI, Flappy Bird AI, and a Chapter Ops Dashboard. Interactive demos + concise technical summaries." />
   <meta name="robots" content="index,follow" />
 
-  <!-- ✅ CURRENT DEPLOYMENT BASE (project pages repo: /portfolio/) -->
-  <link rel="canonical" href="https://rjedwardsss.github.io/portfolio/projects/" />
+  <!-- ✅ Correct canonical for your current structure -->
+  <link rel="canonical" href="https://rjedwardsss.github.io/projects/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Projects | RJ Edwards" />
-  <meta property="og:description" content="Featured projects by RJ Edwards: Tic-Tac-Toe AI, Flappy Bird AI, and a Chapter Ops Dashboard." />
-  <meta property="og:url" content="https://rjedwardsss.github.io/portfolio/projects/" />
+  <meta property="og:description"
+    content="Featured projects by RJ Edwards: Tic-Tac-Toe AI, Flappy Bird AI, and a Chapter Ops Dashboard." />
+  <meta property="og:url" content="https://rjedwardsss.github.io/projects/" />
   <!-- Optional once you add an image -->
-  <!-- <meta property="og:image" content="https://rjedwardsss.github.io/portfolio/projects/og-projects.jpg" /> -->
+  <!-- <meta property="og:image" content="https://rjedwardsss.github.io/projects/og-projects.jpg" /> -->
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Projects | RJ Edwards" />
-  <meta name="twitter:description" content="Featured projects by RJ Edwards: Tic-Tac-Toe AI, Flappy Bird AI, and a Chapter Ops Dashboard." />
-  <!-- <meta name="twitter:image" content="https://rjedwardsss.github.io/portfolio/projects/og-projects.jpg" /> -->
+  <meta name="twitter:description"
+    content="Featured projects by RJ Edwards: Tic-Tac-Toe AI, Flappy Bird AI, and a Chapter Ops Dashboard." />
+  <!-- <meta name="twitter:image" content="https://rjedwardsss.github.io/projects/og-projects.jpg" /> -->
 
   <style>
     :root {
@@ -36,30 +40,49 @@
       --brand-2: #7aa7ff;
       --accent: #c084fc;
       --radius: 16px;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --shadow-soft: 0 6px 18px rgba(0,0,0,.25);
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      --shadow-soft: 0 6px 18px rgba(0, 0, 0, .25);
       --maxw: 1100px;
     }
 
-    * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
-    html, body { height: 100%; scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    html,
+    body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
       overflow-x: hidden;
       background:
-        radial-gradient(1200px 800px at 120% -10%, rgba(56,208,194,.25), transparent 60%),
-        radial-gradient(800px 600px at -20% 10%, rgba(122,167,255,.18), transparent 60%),
+        radial-gradient(1200px 800px at 120% -10%, rgba(56, 208, 194, .25), transparent 60%),
+        radial-gradient(800px 600px at -20% 10%, rgba(122, 167, 255, .18), transparent 60%),
         var(--bg);
       color: var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       line-height: 1.6;
     }
 
-    img, svg, video { max-width: 100%; height: auto; display: block; }
+    img,
+    svg,
+    video {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     .container {
       width: min(var(--maxw), 100% - 2rem);
@@ -67,14 +90,14 @@
     }
 
     .button {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:.5rem;
-      border:1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      border: 1px solid transparent;
       background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color:#051014;
-      padding:.9rem 1.1rem;
+      color: #051014;
+      padding: .9rem 1.1rem;
       border-radius: 999px;
       font-weight: 800;
       box-shadow: var(--shadow-soft);
@@ -84,111 +107,227 @@
       -webkit-tap-highlight-color: transparent;
       text-align: center;
     }
-    .button:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.25); }
-    .button.secondary { background: transparent; color: var(--text); border-color: rgba(255,255,255,.12); box-shadow:none; }
-    .button.secondary:hover { background: rgba(255,255,255,.06); }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .25);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: rgba(255, 255, 255, .12);
+      box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      background: rgba(255, 255, 255, .06);
+    }
 
     /* NAV */
     .nav {
-      position: sticky; top: 0; z-index: 50;
+      position: sticky;
+      top: 0;
+      z-index: 50;
       backdrop-filter: saturate(120%) blur(8px);
       background: color-mix(in oklab, var(--bg) 86%, transparent);
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
     }
+
     .nav .inner {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       min-height: 64px;
       gap: 1rem;
     }
-    .brand { display:flex; align-items:center; gap:.7rem; font-weight:900; letter-spacing:.5px; white-space: nowrap; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      font-weight: 900;
+      letter-spacing: .5px;
+      white-space: nowrap;
+    }
+
     .brand .logo {
-      width:32px; height:32px; display:grid; place-items:center;
-      border-radius: 10px; background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color:#031016; font-weight:900; box-shadow: var(--shadow-soft);
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #031016;
+      font-weight: 900;
+      box-shadow: var(--shadow-soft);
       flex: 0 0 auto;
     }
-    .nav a { color: var(--muted); font-weight: 700; }
-    .nav a.active { color: var(--text); }
-    .nav .links { display:flex; gap:1rem; align-items:center; flex-wrap: wrap; justify-content: flex-end; }
 
-    main { padding: 4rem 0; }
-    h1 { font-size: clamp(2rem, 4vw, 2.6rem); margin: 0 0 .6rem; }
-    .lead { color: var(--muted); max-width: 70ch; margin: 0 0 1.5rem; }
+    .nav a {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .nav a.active {
+      color: var(--text);
+    }
+
+    .nav .links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    main {
+      padding: 4rem 0;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      margin: 0 0 .6rem;
+    }
+
+    .lead {
+      color: var(--muted);
+      max-width: 70ch;
+      margin: 0 0 1.5rem;
+    }
 
     /* PROJECT GRID */
-    .projects { display:grid; grid-template-columns: repeat(12, 1fr); gap: 1.2rem; }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.2rem;
+    }
+
     .card {
       grid-column: span 4;
       background: linear-gradient(180deg, var(--surface), var(--elev));
-      border:1px solid rgba(255,255,255,.08);
+      border: 1px solid rgba(255, 255, 255, .08);
       border-radius: var(--radius);
       padding: 1.1rem;
-      display:flex;
-      flex-direction:column;
+      display: flex;
+      flex-direction: column;
       gap: .8rem;
       box-shadow: var(--shadow-soft);
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 22px 36px rgba(0,0,0,.25); border-color: rgba(255,255,255,.16); }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 36px rgba(0, 0, 0, .25);
+      border-color: rgba(255, 255, 255, .16);
+    }
 
     .thumb {
       height: 210px;
       border-radius: 12px;
       background: #000;
-      border: 1px solid rgba(255,255,255,.06);
+      border: 1px solid rgba(255, 255, 255, .06);
       box-shadow: var(--shadow-soft);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
       margin-bottom: .2rem;
     }
-    .thumb-img{
+
+    .thumb-img {
       height: 90%;
       width: auto;
       object-fit: contain;
-      display:block;
+      display: block;
       filter: contrast(1.05) saturate(1.06);
       transition: transform .25s ease, filter .25s ease;
     }
-    .card:hover .thumb-img { transform: scale(1.02); }
 
-    .chip { display:inline-flex; align-items:center; gap:.35rem; padding:.25rem .6rem; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--muted); font-size: .85rem; }
-    .chip i { width:8px; height:8px; border-radius:999px; display:inline-block; background: var(--brand); }
-    .flex { display:flex; gap:.6rem; align-items:center; flex-wrap: wrap; }
-
-    @media (max-width: 980px) { .card { grid-column: span 6; } }
-    @media (max-width: 640px) {
-      .card { grid-column: span 12; }
-      .button { width: 100%; }
+    .card:hover .thumb-img {
+      transform: scale(1.02);
     }
 
-    @media (prefers-reduced-motion: reduce){
-      * { scroll-behavior: auto !important; }
-      .button, .card, .thumb-img { transition: none !important; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .25rem .6rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .chip i {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+      background: var(--brand);
+    }
+
+    .flex {
+      display: flex;
+      gap: .6rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .card {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        grid-column: span 12;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+      }
+
+      .button,
+      .card,
+      .thumb-img {
+        transition: none !important;
+      }
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2.5rem 0 3rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(255, 255, 255, .06);
     }
   </style>
 
-  <!-- ✅ JSON-LD: Projects page + items (absolute URLs for best results) -->
+  <!-- ✅ JSON-LD: corrected to your current GitHub Pages base -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "CollectionPage",
-        "@id": "https://rjedwardsss.github.io/portfolio/projects/#page",
+        "@id": "https://rjedwardsss.github.io/projects/#page",
         "name": "Projects | RJ Edwards",
         "description": "Featured projects by RJ Edwards: Tic-Tac-Toe AI, Flappy Bird AI, and a Chapter Ops Dashboard.",
         "inLanguage": "en",
-        "url": "https://rjedwardsss.github.io/portfolio/projects/"
+        "url": "https://rjedwardsss.github.io/projects/"
       },
       {
         "@type": "Person",
-        "@id": "https://rjedwardsss.github.io/portfolio/#rj-edwards",
+        "@id": "https://rjedwardsss.github.io/#rj-edwards",
         "name": "RJ Edwards",
-        "url": "https://rjedwardsss.github.io/portfolio/",
+        "url": "https://rjedwardsss.github.io/",
         "sameAs": [
           "https://github.com/rjedwardsss",
           "https://www.linkedin.com/in/rjedwardsss/"
@@ -200,8 +339,8 @@
         "applicationCategory": "Game",
         "operatingSystem": "Web",
         "description": "A browser-based Tic-Tac-Toe AI originally prototyped in Java and re-engineered in JavaScript.",
-        "author": { "@id": "https://rjedwardsss.github.io/portfolio/#rj-edwards" },
-        "url": "https://rjedwardsss.github.io/portfolio/projects/ttt.html"
+        "author": { "@id": "https://rjedwardsss.github.io/#rj-edwards" },
+        "url": "https://rjedwardsss.github.io/projects/ttt.html"
       },
       {
         "@type": "SoftwareApplication",
@@ -209,8 +348,8 @@
         "applicationCategory": "Game",
         "operatingSystem": "Web",
         "description": "A browser-based Flappy Bird AI using simple neural networks and genetic algorithms, originally prototyped in Python.",
-        "author": { "@id": "https://rjedwardsss.github.io/portfolio/#rj-edwards" },
-        "url": "https://rjedwardsss.github.io/portfolio/projects/flappy.html"
+        "author": { "@id": "https://rjedwardsss.github.io/#rj-edwards" },
+        "url": "https://rjedwardsss.github.io/projects/flappy.html"
       },
       {
         "@type": "SoftwareApplication",
@@ -218,29 +357,29 @@
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web",
         "description": "A lightweight dashboard for managing chapter operations with tracking for members, dues, events, and tasks.",
-        "author": { "@id": "https://rjedwardsss.github.io/portfolio/#rj-edwards" },
-        "url": "https://rjedwardsss.github.io/portfolio/projects/chapter-ops.html"
+        "author": { "@id": "https://rjedwardsss.github.io/#rj-edwards" },
+        "url": "https://rjedwardsss.github.io/projects/chapter-ops.html"
       }
     ]
   }
+  
   </script>
 </head>
 
 <body>
   <header class="nav">
     <div class="container inner">
-      <!-- ✅ deployment-safe -->
-      <a class="brand" href="../index.html" aria-label="Home">
+      <!-- ✅ Correct for /projects/ page -->
+      <a class="brand" href="../" aria-label="Home">
         <span class="logo">RJ</span>
         <span>RJ Edwards</span>
       </a>
 
       <nav class="links" aria-label="Primary">
-        <!-- ✅ deployment-safe -->
-        <a href="../index.html">Home</a>
+        <a href="../">Home</a>
         <a class="active" href="./">Projects</a>
-        <a href="../index.html#skills">Skills</a>
-        <a href="../index.html#contact">Contact</a>
+        <a href="../#skills">Skills</a>
+        <a href="../#contact">Contact</a>
       </nav>
     </div>
   </header>
@@ -249,16 +388,19 @@
     <div class="container">
       <h1>Featured Projects</h1>
       <p class="lead">
-        A small selection of work spanning AI/ML experimentation, browser-based demos, and lightweight operational tools.
+        A small selection of work spanning AI/ML experimentation, browser-based demos, and lightweight operational
+        tools.
       </p>
 
       <div class="projects" aria-label="Featured projects list">
         <article class="card">
           <div class="thumb">
-            <img class="thumb-img" src="tictactoe.png" alt="Preview of Tic-Tac-Toe AI project" loading="lazy" decoding="async" />
+            <img class="thumb-img" src="tictactoe.png" alt="Preview of Tic-Tac-Toe AI project" loading="lazy"
+              decoding="async" />
           </div>
           <h2 style="font-size:1.2rem;margin:.2rem 0;">Tic-Tac-Toe AI</h2>
-          <p>A browser-based implementation of a Tic-Tac-Toe AI originally prototyped in Java and re-engineered in JavaScript for seamless play directly in the browser.</p>
+          <p>A browser-based implementation of a Tic-Tac-Toe AI originally prototyped in Java and re-engineered in
+            JavaScript for seamless play directly in the browser.</p>
           <div class="flex" aria-label="Tech stack">
             <span class="chip"><i></i>Java</span>
             <span class="chip"><i></i>JavaScript</span>
@@ -271,10 +413,12 @@
 
         <article class="card">
           <div class="thumb">
-            <img class="thumb-img" src="flappybird.png" alt="Preview of Flappy Bird AI project" loading="lazy" decoding="async" />
+            <img class="thumb-img" src="flappybird.png" alt="Preview of Flappy Bird AI project" loading="lazy"
+              decoding="async" />
           </div>
           <h2 style="font-size:1.2rem;margin:.2rem 0;">Flappy Bird AI</h2>
-          <p>A browser-based implementation of Flappy Bird using simple neural networks and genetic algorithms that was originally prototyped in Python.</p>
+          <p>A browser-based implementation of Flappy Bird using simple neural networks and genetic algorithms that was
+            originally prototyped in Python.</p>
           <div class="flex" aria-label="Tech stack">
             <span class="chip"><i></i>Python</span>
             <span class="chip"><i></i>NumPy</span>
@@ -287,10 +431,12 @@
 
         <article class="card">
           <div class="thumb">
-            <img class="thumb-img" src="dashboard.png" alt="Preview of Chapter Ops Dashboard project" loading="lazy" decoding="async" />
+            <img class="thumb-img" src="dashboard.png" alt="Preview of Chapter Ops Dashboard project" loading="lazy"
+              decoding="async" />
           </div>
           <h2 style="font-size:1.2rem;margin:.2rem 0;">Chapter Ops Dashboard v1.0</h2>
-          <p>A lightweight browser-based dashboard for managing chapter operations with interactive tracking of members, dues, events, and tasks.</p>
+          <p>A lightweight dashboard for managing chapter operations with interactive tracking of members, dues, events,
+            and tasks.</p>
           <div class="flex" aria-label="Tech stack">
             <span class="chip"><i></i>HTML</span>
             <span class="chip"><i></i>JavaScript</span>
@@ -303,11 +449,24 @@
       </div>
 
       <div class="flex" style="margin-top:1.6rem; gap:.8rem;">
-        <!-- ✅ deployment-safe -->
-        <a class="button secondary" href="../index.html">Back to Home</a>
-        <a class="button" href="https://github.com/rjedwardsss" target="_blank" rel="noreferrer noopener">More on GitHub</a>
+        <a class="button secondary" href="../">Back to Home</a>
+        <a class="button" href="https://github.com/rjedwardsss" target="_blank" rel="noreferrer noopener">More on
+          GitHub</a>
       </div>
     </div>
   </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> RJ Edwards. All rights reserved.</div>
+    </div>
+  </footer>
+
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
+
 </html>

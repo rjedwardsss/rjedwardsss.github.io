@@ -3,11 +3,12 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Mobile-safe viewport (prevents weird zoom/scale behavior) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <title>RJ Edwards | Data Science & Software Engineering Portfolio</title>
   <meta name="description"
-    content="RJ Edwards — Data Science and Computer Science student at UW–Madison. Portfolio, projects, experience, and contact." />
+    content="RJ Edwards — Data Science and Computer Science student at UW-Madison. Portfolio, projects, experience, and contact." />
   <meta name="robots" content="index,follow" />
 
   <!-- Open Graph -->
@@ -15,11 +16,6 @@
   <meta property="og:description"
     content="Data Science • Computer Science • Leadership. Projects, experience, and contact." />
   <meta property="og:type" content="website" />
-
-  <!-- Optional: If you deploy under a real domain, set these -->
-  <!-- <link rel="canonical" href="https://yourdomain.com/" /> -->
-  <!-- <meta property="og:url" content="https://yourdomain.com/" /> -->
-  <!-- <meta property="og:image" content="https://yourdomain.com/og.png" /> -->
 
   <link rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2300d1b2'/%3E%3Ctext x='32' y='41' font-size='28' text-anchor='middle' fill='white' font-family='Segoe UI, Roboto, Arial, sans-serif'%3ER%3C/text%3E%3C/svg%3E" />
@@ -38,7 +34,7 @@
     "jobTitle": "Data Science & Software Engineering Student",
     "affiliation": {
       "@type": "CollegeOrUniversity",
-      "name": "University of Wisconsin–Madison"
+      "name": "University of Wisconsin-Madison"
     }
   }
   </script>
@@ -93,6 +89,10 @@
       box-sizing: border-box;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
     html,
     body {
       height: 100%;
@@ -101,6 +101,8 @@
 
     body {
       margin: 0;
+      overflow-x: hidden;
+      /* prevents horizontal scroll on small devices */
       background:
         radial-gradient(1200px 800px at 120% -10%, rgba(56, 208, 194, .25), transparent 60%),
         radial-gradient(800px 600px at -20% 10%, rgba(122, 167, 255, .18), transparent 60%),
@@ -111,16 +113,23 @@
       letter-spacing: .2px;
     }
 
+    img,
+    video,
+    svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
     a {
       color: inherit;
       text-decoration: none;
     }
 
+    /* container that behaves well on every viewport */
     .container {
-      width: 100%;
-      max-width: var(--maxw);
+      width: min(var(--maxw), 100% - 2rem);
       margin: 0 auto;
-      padding: 0 1.2rem;
     }
 
     .button {
@@ -136,6 +145,10 @@
       box-shadow: var(--shadow-soft);
       transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
       cursor: pointer;
+      text-align: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .button:hover {
@@ -168,7 +181,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
+      min-height: 64px;
+      gap: 1rem;
     }
 
     .brand {
@@ -177,6 +191,7 @@
       gap: .7rem;
       font-weight: 900;
       letter-spacing: .5px;
+      white-space: nowrap;
     }
 
     .brand .logo {
@@ -189,6 +204,7 @@
       color: #031016;
       font-weight: 900;
       box-shadow: var(--shadow-soft);
+      flex: 0 0 auto;
     }
 
     .nav a {
@@ -204,6 +220,9 @@
       display: flex;
       gap: 1rem;
       align-items: center;
+      flex-wrap: wrap;
+      /* key: keeps nav usable on small screens */
+      justify-content: flex-end;
     }
 
     .theme-toggle {
@@ -217,6 +236,7 @@
       align-items: center;
       gap: .5rem;
       font-weight: 800;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* HERO */
@@ -257,6 +277,7 @@
       display: flex;
       gap: .8rem;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .hero-card {
@@ -272,6 +293,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 1rem;
       padding: .8rem 1rem;
       background: rgba(255, 255, 255, .03);
       border-radius: 12px;
@@ -287,6 +309,7 @@
       background: rgba(122, 167, 255, .12);
       color: var(--brand-2);
       font-weight: 800;
+      white-space: nowrap;
     }
 
     /* SECTIONS */
@@ -309,9 +332,7 @@
     .logo-wall {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      /* max 5 per row on desktop */
       gap: 1.2rem;
-      margin-top: 1.2rem;
       align-items: center;
       list-style: none;
       padding: 0;
@@ -322,7 +343,7 @@
       list-style: none;
     }
 
-    /* Each logo tile is a fixed square so all rows line up */
+    /* Make tiles feel intentional (no "grey card") */
     .logo-item {
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -330,21 +351,34 @@
       place-items: center;
       border-radius: 18px;
       overflow: hidden;
-      /* ensures image stays inside */
       text-decoration: none;
+
+      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .015));
+      border: 1px solid rgba(255, 255, 255, .08);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .22);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
 
-    /* Make every image fill the tile the same way */
+    .logo-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 208, 194, .25);
+      box-shadow:
+        0 16px 34px rgba(0, 0, 0, .28),
+        0 0 0 1px rgba(56, 208, 194, .10) inset;
+    }
+
+    /* This is the key: contain + padding so all logos look consistent */
     .logo-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      /* uniform tiles */
       display: block;
-      border-radius: 18px;
+
+      /* Helps logos look less "flat" without changing their colors */
+      filter: contrast(1.02) saturate(1.02);
     }
 
-    /* Responsive: fewer columns as screen shrinks */
+    /* Responsive logo columns */
     @media (max-width: 980px) {
       .logo-wall {
         grid-template-columns: repeat(3, 1fr);
@@ -356,9 +390,6 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
-
-
-
 
 
 
@@ -395,6 +426,7 @@
       display: grid;
       grid-template-columns: 1.1fr .9fr;
       gap: 1.8rem;
+      align-items: start;
     }
 
     .panel input,
@@ -413,18 +445,21 @@
       resize: vertical;
     }
 
+    /* Form layout: 2 columns, subject spans full width */
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1.2rem;
     }
 
-    /* button style for the form submit */
+    .grid-2 .full {
+      grid-column: 1 / -1;
+    }
+
     button[type="submit"] {
       border: 1px solid rgba(255, 255, 255, .12);
     }
 
-    /* photo */
     .photo-panel {
       display: flex;
       justify-content: center;
@@ -436,14 +471,14 @@
       height: auto;
       border-radius: 16px;
       object-fit: cover;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 208, 194, 0.15);
-      transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
-      filter: brightness(0.95) contrast(1.05);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .45), 0 0 20px rgba(56, 208, 194, .15);
+      transition: transform .4s ease, box-shadow .4s ease, filter .4s ease;
+      filter: brightness(.95) contrast(1.05);
     }
 
     .profile-photo:hover {
       transform: scale(1.05);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 28px rgba(122, 167, 255, 0.3);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .55), 0 0 28px rgba(122, 167, 255, .3);
       filter: brightness(1) contrast(1.1);
     }
 
@@ -454,7 +489,7 @@
       border-top: 1px solid rgba(255, 255, 255, .06);
     }
 
-    /* tiny animations */
+    /* animations */
     [data-animate] {
       opacity: 0;
       transform: translateY(16px);
@@ -468,6 +503,10 @@
 
     /* RESPONSIVE */
     @media (max-width: 980px) {
+      .hero {
+        padding: 6rem 0 4rem;
+      }
+
       .hero-grid {
         grid-template-columns: 1fr;
       }
@@ -486,16 +525,67 @@
     }
 
     @media (max-width: 640px) {
+      section {
+        padding: 3rem 0;
+      }
+
+      .hero {
+        padding: 5rem 0 3rem;
+      }
+
+      /* Buttons become full-width for good tap targets */
+      .cta {
+        gap: .6rem;
+      }
+
+      .cta .button {
+        width: 100%;
+      }
+
+      /* Keep nav usable on mobile (wrapped links) */
+      .nav .inner {
+        padding: .8rem 0;
+        align-items: flex-start;
+      }
+
+      .nav .links {
+        gap: .6rem;
+      }
+
       .skills {
         grid-template-columns: 1fr;
       }
 
-      .nav .links {
-        display: none;
-      }
-
       .logo-wall {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* Contact fields stack on small devices */
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-photo {
+        width: min(320px, 100%);
+      }
+    }
+
+    /* Accessibility: respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+      }
+
+      [data-animate] {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+
+      .button,
+      .logo-item,
+      .profile-photo {
+        transition: none !important;
       }
     }
   </style>
@@ -504,18 +594,19 @@
 <body>
   <header class="nav">
     <div class="container inner">
-      <a class="brand" href="/" aria-label="Home">
+      <a class="brand" href="./" aria-label="Home">
         <span class="logo">RJ</span>
         <span>RJ Edwards</span>
       </a>
 
       <nav class="links" aria-label="Primary">
-        <a href="/" class="active">Home</a>
+        <a href="./" class="active">Home</a>
         <a href="projects/">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
-        <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙 <span
-            class="label">Dark</span></button>
+        <button class="theme-toggle" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">
+          🌙 <span class="label">Dark</span>
+        </button>
       </nav>
     </div>
   </header>
@@ -529,9 +620,9 @@
           </h1>
 
           <p class="sub" data-animate style="transition-delay:.12s">
-            I’m a Computer Science and Data Science student at the University of Wisconsin–Madison passionate about
-            technology, analytics,
-            and turning data into impactful solutions. My work spans software development, AI/ML experimentation, and
+            I’m a Computer Science and Data Science student at the University of Wisconsin-Madison passionate about
+            technology, analytics, and turning data into impactful solutions. My work spans software development, AI/ML
+            experimentation, and
             leadership.
           </p>
 
@@ -547,7 +638,7 @@
         <aside>
           <div class="hero-card" data-animate>
             <div class="stat"><strong>Current Focus</strong><span class="pill">Data • ML • Web</span></div>
-            <div class="stat"><strong>Education</strong><span>University of Wisconsin–Madison</span></div>
+            <div class="stat"><strong>Education</strong><span>University of Wisconsin-Madison</span></div>
             <div class="stat"><strong>Credentials</strong><span>Data Science, B.S.</span></div>
             <div class="stat"><strong>Location</strong><span>Moreno Valley, CA · Remote OK</span></div>
           </div>
@@ -564,107 +655,112 @@
           LinkedIn. Click the logos to learn more.
         </p>
 
-        <div class="logo-wall" aria-label="Organizations worked with">
-
+        <ul class="logo-wall" aria-label="Organizations worked with">
           <li>
             <a class="logo-item" href="https://stagekeep.com/" target="_blank" rel="noreferrer noopener"
               aria-label="StageKeep">
-              <img src="experience/stagekeep.png" alt="StageKeep" loading="lazy" />
+              <img src="experience/stagekeep.png" alt="StageKeep logo" loading="lazy" decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.steppy.ai/" target="_blank" rel="noreferrer noopener"
               aria-label="Steppy AI">
-              <img src="experience/steppyai.png" alt="Steppy AI" loading="lazy" />
+              <img src="experience/steppyai.png" alt="Steppy AI logo" loading="lazy" decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.wisc.edu/" target="_blank" rel="noreferrer noopener"
-              aria-label="University of Wisconsin–Madison">
-              <img src="experience/uwmadison.png" alt="University of Wisconsin–Madison" loading="lazy" />
+              aria-label="University of Wisconsin-Madison">
+              <img src="experience/uwmadison.png" alt="University of Wisconsin-Madison logo" loading="lazy"
+                decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.hunterirrigation.com/" target="_blank" rel="noreferrer noopener"
               aria-label="Hunter Industries">
-              <img src="experience/hunterindustries.jpeg" alt="Hunter Industries" loading="lazy" />
+              <img src="experience/hunterindustries.jpeg" alt="Hunter Industries logo" loading="lazy"
+                decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.joinsaturn.com/" target="_blank" rel="noreferrer noopener"
               aria-label="Saturn Technologies">
-              <img src="experience/saturnapp.jpeg" alt="Saturn Technologies" loading="lazy" />
+              <img src="experience/saturnapp.jpeg" alt="Saturn Technologies logo" loading="lazy" decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://alphasig.org/" target="_blank" rel="noreferrer noopener"
               aria-label="Alpha Sigma Phi Fraternity">
-              <img src="experience/alphasig.jpeg" alt="Alpha Sigma Phi Fraternity" loading="lazy" />
+              <img src="experience/alphasig.jpeg" alt="Alpha Sigma Phi Fraternity logo" loading="lazy"
+                decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.rcoe.us/" target="_blank" rel="noreferrer noopener"
-              aria-label="RCOE">
-              <img src="experience/riversideofficeofeducation.jpg" alt="RCOE" loading="lazy" />
+              aria-label="Riverside County Office of Education">
+              <img src="experience/riversideofficeofeducation.jpg" alt="Riverside County Office of Education logo"
+                loading="lazy" decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.redcross.org/" target="_blank" rel="noreferrer noopener"
               aria-label="American Red Cross">
-              <img src="experience/americanredcross.jpg" alt="American Red Cross" loading="lazy" />
+              <img src="experience/americanredcross.jpg" alt="American Red Cross logo" loading="lazy"
+                decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.moval.org/mv-library/" target="_blank" rel="noreferrer noopener"
               aria-label="Moreno Valley Public Library">
-              <img src="experience/morenovalleylibrary.jpg" alt="Moreno Valley Public Library" loading="lazy" />
+              <img src="experience/morenovalleylibrary.jpg" alt="Moreno Valley Public Library logo" loading="lazy"
+                decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="http://www.humorology.org/" target="_blank" rel="noreferrer noopener"
               aria-label="Humorology">
-              <img src="experience/humorology.png" alt="Humorology" loading="lazy" />
+              <img src="experience/humorology.png" alt="Humorology logo" loading="lazy" decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.instagram.com/vvhs.cshonorsociety/" target="_blank"
               rel="noreferrer noopener" aria-label="Valley View High School Computer Science Honor Society">
-              <img src="experience/vvhs computer science honor society.jpg"
-                alt="Valley View High School Computer Science Honor Society" loading="lazy" />
+              <img src="experience/vvhs-cs-honor-society.jpg" alt="Valley View HS Computer Science Honor Society logo" loading="lazy" decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://valleyview.mvusd.net/" target="_blank" rel="noreferrer noopener"
               aria-label="Valley View High School">
-              <img src="experience/valleyview.png" alt="Valley View High School" loading="lazy" />
+              <img src="experience/valleyview.png" alt="Valley View High School logo" loading="lazy" decoding="async" />
             </a>
           </li>
 
           <li>
             <a class="logo-item" href="https://www.nationalhonorsociety.org/" target="_blank" rel="noreferrer noopener"
               aria-label="National Honor Society">
-              <img src="experience/nationalhonorsociety.png" alt="National Honor Society" loading="lazy" />
+              <img src="experience/nationalhonorsociety.png" alt="National Honor Society logo" loading="lazy"
+                decoding="async" />
             </a>
           </li>
-
-        </div>
+        </ul>
       </div>
     </section>
 
     <section id="skills">
       <div class="container">
         <h2 data-animate>Technical Skills</h2>
+
         <div class="skills">
           <div class="panel" data-animate>
             <strong>Python</strong>
@@ -696,13 +792,11 @@
     <section id="contact">
       <div class="container">
         <h2 data-animate>Contact Me</h2>
+
         <div class="contact">
           <div class="panel" data-animate>
             <form action="https://formspree.io/f/mreepybw" method="POST">
-              <!-- Optional: redirect after submit -->
-              <!-- <input type="hidden" name="_redirect" value="https://yourdomain.com/thanks.html"> -->
-
-              <!-- Optional: spam honeypot (bots fill this, humans won’t) -->
+              <!-- spam honeypot -->
               <input type="text" name="_gotcha" style="display:none">
 
               <div class="grid-2">
@@ -710,11 +804,13 @@
                   <label for="name">Name</label>
                   <input id="name" name="name" placeholder="Please enter your name." required />
                 </div>
+
                 <div>
                   <label for="email">Email</label>
-                  <input type="email" name="email" placeholder="Please enter your email." required />
+                  <input id="email" type="email" name="email" placeholder="Please enter your email." required />
                 </div>
-                <div>
+
+                <div class="full">
                   <label for="subject">Subject</label>
                   <input id="subject" name="subject" placeholder="Please enter the subject." required />
                 </div>
@@ -722,8 +818,7 @@
 
               <div style="margin:.8rem 0">
                 <label for="message">Message</label>
-                <textarea id="message" name="message" placeholder="Please enter your message here."
-                  required></textarea>
+                <textarea id="message" name="message" placeholder="Please enter your message here." required></textarea>
               </div>
 
               <div class="cta">
@@ -733,12 +828,12 @@
           </div>
 
           <div class="panel photo-panel" data-animate style="transition-delay:.05s">
-            <img src="contact/profile.jpg" alt="RJ Edwards headshot" class="profile-photo" />
+            <img src="contact/profile.jpg" alt="RJ Edwards headshot" class="profile-photo" loading="lazy"
+              decoding="async" />
           </div>
         </div>
       </div>
     </section>
-
   </main>
 
   <footer>
@@ -762,14 +857,18 @@
     // Theme toggle with preference persistence
     const root = document.documentElement;
     const toggle = document.getElementById('themeToggle');
+
     const applyTheme = (t) => {
       root.setAttribute('data-theme', t);
       toggle.querySelector('.label').textContent = t === 'dark' ? 'Dark' : 'Light';
-      toggle.firstChild.textContent = t === 'dark' ? '🌙' : '☀️';
+      // safer than toggle.firstChild when whitespace changes
+      toggle.childNodes[0].nodeValue = (t === 'dark' ? '🌙 ' : '☀️ ');
     };
+
     const stored = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     applyTheme(stored || (prefersDark ? 'dark' : 'light'));
+
     toggle.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       localStorage.setItem('theme', next);

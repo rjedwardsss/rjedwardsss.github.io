@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Flappy Bird — Neuro-evolution • RJ Edwards</title>
+  <meta name="description" content="Playable Flappy Bird neuro-evolution demo with evolving neural nets (JS only)."/>
+  <style>
+    :root{
+      --bg:#0b0c10; --surface:#11131a; --elev:#171a22; --text:#e6e6e6; --muted:#a2a7b3;
+      --brand:#38d0c2; --brand-2:#7aa7ff; --accent:#c084fc; --radius:16px;
+      --shadow:0 10px 30px rgba(0,0,0,.35); --shadow-soft:0 6px 18px rgba(0,0,0,.25);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#fafafa; --surface:#ffffff; --elev:#f4f6fb; --text:#0f172a; --muted:#5b6476;
+      --shadow:0 10px 30px rgba(2,6,23,.1); --shadow-soft:0 6px 18px rgba(2,6,23,.08); }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:
+        radial-gradient(1200px 800px at 120% -10%, rgba(56,208,194,.25), transparent 60%),
+        radial-gradient(800px 600px at -20% 10%, rgba(122,167,255,.18), transparent 60%),
+        var(--bg);
+      color:var(--text); line-height:1.6; letter-spacing:.2px;
+    }
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(120%) blur(8px);
+      background: color-mix(in oklab, var(--bg) 86%, transparent);
+      border-bottom:1px solid rgba(255,255,255,.06);}
+    .container{ max-width:960px; margin:0 auto; padding:0 1.2rem;}
+    .nav{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .brand{ display:flex; gap:.7rem; align-items:center; font-weight:800}
+    .logo{ width:32px;height:32px; display:grid; place-items:center; border-radius:10px;
+      background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#031016; box-shadow:var(--shadow-soft);}
+    main{ padding:2.2rem 0 3rem;}
+    h1{ font-size:clamp(1.6rem,4vw,2.2rem); margin:0 0 .6rem}
+    .muted{ color:var(--muted)}
+    .panel{ background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow-soft);}
+    .controls{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom: .8rem;}
+    .chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .7rem; border-radius:999px;
+      background:rgba(255,255,255,.06); color:var(--text); border:1px solid rgba(255,255,255,.10);}
+    .button{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid transparent;
+      background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#051014; padding:.7rem 1rem;
+      border-radius:999px; font-weight:700; box-shadow:var(--shadow-soft); cursor:pointer;}
+    .button.secondary{ background:transparent; color:var(--text); border-color:rgba(255,255,255,.14); }
+    .button:disabled{ opacity:.6; cursor:not-allowed }
+    .right{ margin-left:auto; display:flex; gap:.6rem; align-items:center; }
+    .slider{ appearance:none; width:160px; height:8px; border-radius:999px;
+      background:rgba(255,255,255,.1); outline:none; overflow:hidden; }
+    .slider::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%;
+      background:linear-gradient(135deg,var(--brand),var(--brand-2)); cursor:pointer; box-shadow:0 0 0 4px rgba(255,255,255,.15); }
+    .hud{ display:flex; gap:.6rem; flex-wrap:wrap; margin:.4rem 0 0; color:var(--muted) }
+    .tag{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:999px; padding:.25rem .6rem; }
+    canvas{ width:100%; max-width:720px; height:auto; border-radius:14px; border:1px solid rgba(255,255,255,.08); background:#0b0c10; display:block; margin:0.6rem auto; }
+    footer{ padding:1.4rem 0 1.6rem; color:var(--muted); border-top:1px solid rgba(255,255,255,.06); text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="logo">RJ</span><span>RJ Edwards</span></div>
+      <a class="button secondary" href="index.html">← Back to Portfolio</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Flappy Bird AI</h1>
+      <p class="muted">A browser simulation where a flock of birds evolves tiny neural nets to survive longer. Start a run, adjust the speed, and watch generations improve.</p>
+
+      <section class="panel">
+        <div class="controls">
+          <button class="button" id="start">Start</button>
+          <button class="button secondary" id="stop">Stop</button>
+          <button class="button secondary" id="reset">Reset</button>
+
+          <div class="right">
+            <span class="chip">Speed</span>
+            <input id="speed" class="slider" type="range" min="1" max="8" value="3" step="1" />
+            <span class="chip" id="speedLabel">3×</span>
+          </div>
+        </div>
+
+        <canvas id="c" width="720" height="420" aria-label="Flappy Bird canvas"></canvas>
+
+        <div class="hud">
+          <span class="tag">Gen: <strong id="gen">1</strong></span>
+          <span class="tag">Alive: <strong id="alive">0</strong></span>
+          <span class="tag">Score: <strong id="score">0</strong></span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>© <span id="yr"></span> RJ Edwards. All rights reserved.</footer>
+
+  <script>
+    // =========================
+    // Canvas + UI
+    // =========================
+    const $ = s => document.querySelector(s);
+    const C = $('#c'), ctx = C.getContext('2d');
+    const startBtn = $('#start'), stopBtn = $('#stop'), resetBtn = $('#reset');
+    const speedEl = $('#speed'), speedLabel = $('#speedLabel');
+    const genEl = $('#gen'), aliveEl = $('#alive'), scoreEl = $('#score');
+    $('#yr').textContent = new Date().getFullYear();
+
+    // =========================
+    // Game constants
+    // =========================
+    const W = C.width, H = C.height;
+    const GRAVITY = 0.4;
+    const FLAP_V = -7.5;
+    const PIPE_W = 60;
+    const GAP_MIN = 105, GAP_MAX = 165;
+    const PIPE_SPACING = 160;   // distance between pipe pairs (px)
+    const PIPE_SPEED = 2.6;
+    const POP_SIZE = 24;
+    const ELITE_COUNT = 6;      // survivors kept for next gen
+    const MUTATION_RATE = 0.15;
+    const MUTATION_SCALE = 0.35;
+
+    // NN: 5 -> 6 -> 1 (tiny, fast)
+    const INPUTS = 5, HIDDEN = 6, OUTPUTS = 1;
+
+    // =========================
+    // State
+    // =========================
+    let flock = [];
+    let pipes = [];
+    let frame = 0;
+    let gen = 1;
+    let bestScore = 0;
+    let score = 0;
+    let anim = null;
+    let simSpeed = parseInt(speedEl.value, 10); // how many logic ticks per render
+
+    class Bird {
+      constructor(brain){
+        this.x = 110;
+        this.y = H/2;
+        this.vy = 0;
+        this.alive = true;
+        this.score = 0;       // lifetime frames
+        this.passed = 0;      // pipes passed
+        this.brain = brain || Bird.randomBrain();
+      }
+      think(nearest){
+        // Inputs: y/H, vy/10, topGap/H, botGap/H, pipeX/W
+        const px = nearest ? nearest.x : W;
+        const gapY = nearest ? nearest.gapY : H/2;
+        const gapH = nearest ? nearest.gapH : 140;
+        const x1 = this.y / H;
+        const x2 = this.vy / 10;
+        const x3 = (gapY - gapH/2) / H;
+        const x4 = (gapY + gapH/2) / H;
+        const x5 = (px - this.x) / W;
+        const out = Bird.forward(this.brain, [x1,x2,x3,x4,x5])[0]; // 0..1 (sigmoid)
+        if(out > 0.5) this.flap();
+      }
+      flap(){ this.vy = FLAP_V; }
+      update(){
+        this.vy += GRAVITY;
+        this.y += this.vy;
+        this.score++;
+        if(this.y < 8 || this.y > H-8) this.alive = false;
+      }
+      static randomBrain(){
+        return {
+          W1: randMat(HIDDEN, INPUTS, 0.6),
+          b1: randVec(HIDDEN, 0.3),
+          W2: randMat(OUTPUTS, HIDDEN, 0.6),
+          b2: randVec(OUTPUTS, 0.3)
+        };
+      }
+      static mutate(brain){
+        const nb = {
+          W1: brain.W1.map(r => r.map(v => mutate(v))),
+          b1: brain.b1.map(v => mutate(v)),
+          W2: brain.W2.map(r => r.map(v => mutate(v))),
+          b2: brain.b2.map(v => mutate(v))
+        };
+        return nb;
+      }
+      static copy(brain){
+        return {
+          W1: brain.W1.map(r => r.slice()),
+          b1: brain.b1.slice(),
+          W2: brain.W2.map(r => r.slice()),
+          b2: brain.b2.slice()
+        };
+      }
+      static forward(brain, x){
+        // hidden = tanh(W1*x + b1)
+        const h = new Array(HIDDEN).fill(0);
+        for(let j=0;j<HIDDEN;j++){
+          let s = brain.b1[j];
+          for(let i=0;i<INPUTS;i++) s += brain.W1[j][i]*x[i];
+          h[j] = Math.tanh(s);
+        }
+        // out = sigmoid(W2*h + b2)
+        const out = new Array(OUTPUTS).fill(0);
+        for(let k=0;k<OUTPUTS;k++){
+          let s = brain.b2[k];
+          for(let j=0;j<HIDDEN;j++) s += brain.W2[k][j]*h[j];
+          out[k] = 1/(1+Math.exp(-s));
+        }
+        return out;
+      }
+    }
+
+    function mutate(v){
+      if(Math.random() < MUTATION_RATE){
+        return v + (Math.random()*2-1)*MUTATION_SCALE;
+      }
+      return v;
+    }
+    function randMat(rows, cols, s){
+      return Array.from({length:rows},()=>Array.from({length:cols},()=> (Math.random()*2-1)*s));
+    }
+    function randVec(n, s){
+      return Array.from({length:n},()=> (Math.random()*2-1)*s);
+    }
+
+    function spawnPipe(){
+      const gapH = randBetween(GAP_MIN, GAP_MAX);
+      const gapY = randBetween(100, H-100);
+      pipes.push({ x: W+20, gapY, gapH, w: PIPE_W, passed:false });
+    }
+    function randBetween(a,b){ return a + Math.random()*(b-a); }
+
+    function resetWorld(){
+      pipes = [];
+      frame = 0;
+      score = 0;
+      spawnPipe();
+    }
+
+    function makeFlock(seedBrains){
+      flock = [];
+      for(let i=0;i<POP_SIZE;i++){
+        const brain = seedBrains ? Bird.mutate(seedBrains[i % seedBrains.length]) : Bird.randomBrain();
+        flock.push(new Bird(brain));
+      }
+      aliveEl.textContent = flock.length;
+    }
+
+    function nextGeneration(){
+      // pick elites by fitness (score + big bonus for pipes passed)
+      const scored = flock.slice().sort((a,b)=> (b.passed*1000 + b.score) - (a.passed*1000 + a.score));
+      const elites = scored.slice(0, ELITE_COUNT).map(b=> Bird.copy(b.brain));
+      bestScore = Math.max(bestScore, scored[0].passed*1000 + scored[0].score);
+      gen++;
+      genEl.textContent = gen;
+      resetWorld();
+      makeFlock(elites);
+    }
+
+    // =========================
+    // Simulation loop
+    // =========================
+    function update(){
+      // multiple logic ticks per frame = speedup
+      for(let s=0; s<simSpeed; s++){
+        frame++;
+        if(frame % PIPE_SPACING === 0) spawnPipe();
+
+        // move pipes
+        pipes.forEach(p=> p.x -= PIPE_SPEED);
+        pipes = pipes.filter(p => p.x + p.w > -10);
+
+        // nearest pipe ahead of birds
+        const nearest = pipes.find(p => p.x + p.w > 100);
+
+        // birds think + move
+        let aliveCount = 0;
+        for(const b of flock){
+          if(!b.alive) continue;
+          b.think(nearest);
+          b.update();
+
+          // collisions with pipes
+          if(nearest){
+            // horizontal check
+            if(b.x > nearest.x - 10 && b.x < nearest.x + nearest.w + 10){
+              // vertical gap check
+              if(!(b.y > nearest.gapY - nearest.gapH/2 && b.y < nearest.gapY + nearest.gapH/2)){
+                b.alive = false;
+              }
+            }
+            // count pass
+            if(!nearest.passed && b.x > nearest.x + nearest.w){
+              nearest.passed = true;
+              b.passed++;
+              score++;
+            }
+          }
+
+          if(b.alive) aliveCount++;
+        }
+        aliveEl.textContent = aliveCount;
+        scoreEl.textContent = score;
+
+        if(aliveCount === 0){
+          nextGeneration();
+          break; // break speed loop so we render new gen immediately
+        }
+      }
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      // backdrop
+      ctx.fillStyle = '#0b0c10';
+      ctx.fillRect(0,0,W,H);
+
+      // pipes
+      ctx.fillStyle = '#38d0c2';
+      pipes.forEach(p=>{
+        ctx.fillRect(p.x, 0, p.w, p.gapY - p.gapH/2);
+        ctx.fillRect(p.x, p.gapY + p.gapH/2, p.w, H - (p.gapY + p.gapH/2));
+      });
+
+      // birds — draw only alive ones
+        for (const b of flock) 
+        {
+            if (!b.alive) continue; // skip dead birds
+            ctx.fillStyle = '#c084fc';
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, 6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+      // HUD overlay
+      ctx.fillStyle = 'rgba(255,255,255,.7)';
+      ctx.font = '12px ui-sans-serif, system-ui';
+      ctx.fillText(`Gen ${gen}  Score ${score}`, 10, 18);
+    }
+
+    function loop(){
+      update();
+      draw();
+      anim = requestAnimationFrame(loop);
+    }
+
+    // =========================
+    // Controls
+    // =========================
+    startBtn.addEventListener('click', ()=>{
+      if(!anim){ anim = requestAnimationFrame(loop); }
+    });
+    stopBtn.addEventListener('click', ()=>{
+      if(anim){ cancelAnimationFrame(anim); anim=null; }
+    });
+    resetBtn.addEventListener('click', ()=>{
+      if(anim){ cancelAnimationFrame(anim); anim=null; }
+      gen = 1; genEl.textContent = gen;
+      resetWorld();
+      makeFlock(); // fresh random brains
+      draw();
+    });
+    speedEl.addEventListener('input', ()=>{
+      simSpeed = parseInt(speedEl.value, 10);
+      speedLabel.textContent = simSpeed + '×';
+    });
+
+    // =========================
+    // Boot
+    // =========================
+    resetWorld();
+    makeFlock(); // random initial pop
+    draw();      // draw initial state
+  </script>
+</body>
+</html>

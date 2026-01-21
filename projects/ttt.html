@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Tic-Tac-Toe — Smart AI • RJ Edwards</title>
+  <meta name="description" content="Playable Tic-Tac-Toe with a perfect AI (minimax + alpha-beta)."/>
+  <style>
+    :root{
+      --bg:#0b0c10; --surface:#11131a; --elev:#171a22; --text:#e6e6e6; --muted:#a2a7b3;
+      --brand:#38d0c2; --brand-2:#7aa7ff; --radius:16px;
+      --shadow:0 10px 30px rgba(0,0,0,.35); --shadow-soft:0 6px 18px rgba(0,0,0,.25);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#fafafa; --surface:#ffffff; --elev:#f4f6fb; --text:#0f172a; --muted:#5b6476;
+        --shadow:0 10px 30px rgba(2,6,23,.1); --shadow-soft:0 6px 18px rgba(2,6,23,.08); }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:
+        radial-gradient(1200px 800px at 120% -10%, rgba(56,208,194,.25), transparent 60%),
+        radial-gradient(800px 600px at -20% 10%, rgba(122,167,255,.18), transparent 60%),
+        var(--bg);
+      color:var(--text); line-height:1.6; letter-spacing:.2px;
+    }
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(120%) blur(8px);
+      background: color-mix(in oklab, var(--bg) 86%, transparent);
+      border-bottom:1px solid rgba(255,255,255,.06);}
+    .container{ max-width:960px; margin:0 auto; padding:0 1.2rem;}
+    .nav{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .brand{ display:flex; gap:.7rem; align-items:center; font-weight:800}
+    .logo{ width:32px;height:32px; display:grid; place-items:center; border-radius:10px;
+      background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#031016; box-shadow:var(--shadow-soft);}
+    main{ padding:2.5rem 0 3rem;}
+    h1{ font-size:clamp(1.6rem,4vw,2.2rem); margin:0 0 .6rem}
+    .muted{ color:var(--muted)}
+    .panel{ background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow-soft);}
+    .controls{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:.8rem;}
+    .chip{ display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .7rem; border-radius:999px;
+      background:rgba(255,255,255,.06); color:var(--text); border:1px solid rgba(255,255,255,.10);}
+    .button{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid transparent;
+      background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#051014; padding:.7rem 1rem;
+      border-radius:999px; font-weight:700; box-shadow:var(--shadow-soft); cursor:pointer;}
+    .button.secondary{ background:transparent; color:var(--text); border-color:rgba(255,255,255,.14); }
+    .button:disabled{ opacity:.6; cursor:not-allowed }
+    .board{ display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin:.6rem auto 0;}
+    .cell{ width:120px; height:120px; display:grid; place-items:center; font-weight:900; font-size:2.6rem;
+      border-radius:14px; background:var(--elev); border:1px solid rgba(255,255,255,.08); cursor:pointer; user-select:none;}
+    .cell.x{ color:#38d0c2 } .cell.o{ color:#7aa7ff }
+    @media (max-width:520px){ .cell{ width:96px; height:96px; font-size:2.2rem } }
+    footer{ padding:2rem 0; color:var(--muted); border-top:1px solid rgba(255,255,255,.06); text-align:center;}
+    .kbd{padding:.15rem .4rem;border:1px solid rgba(255,255,255,.18);border-radius:6px;background:rgba(255,255,255,.05)}
+    
+    /* === Board spacing fix === */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;              /* tighter spacing between tiles */
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  max-width: 300px;          /* keeps grid compact horizontally */
+}
+
+/* Tweak cells to fill that smaller grid nicely */
+.cell {
+  width: 90px;
+  height: 90px;
+  font-size: 2rem;
+  border-radius: 10px;
+}
+
+/* For smaller screens */
+@media (max-width: 520px) {
+  .board {
+    gap: 0.3rem;
+    max-width: 260px;
+  }
+  .cell {
+    width: 78px;
+    height: 78px;
+    font-size: 1.8rem;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="logo">RJ</span><span>RJ Edwards</span></div>
+      <!-- Use your exact reference name -->
+      <a class="button secondary" href="index.html">← Back to Portfolio</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1>Tic-Tac-Toe AI</h1>
+      <p class="muted">Play against a strong AI using perfect minimax. Choose your mark and go.</p>
+
+      <section class="panel">
+        <div class="controls">
+          <label class="chip"><input type="radio" name="mark" value="X" checked> You: X</label>
+          <label class="chip"><input type="radio" name="mark" value="O"> You: O</label>
+          <button class="button" id="new">New Game</button>
+        </div>
+
+        <div id="board" class="board" role="grid" aria-label="Tic Tac Toe board"></div>
+        <p id="status" class="muted">Click a square to play. Press <span class="kbd">R</span> to restart.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>© <span id="yr"></span> RJ Edwards. All rights reserved.</footer>
+
+  <script>
+// ---------- Utilities ----------
+const $ = s => document.querySelector(s);
+
+// Elements
+const boardEl = $('#board');
+const statusEl = $('#status');
+$('#yr').textContent = new Date().getFullYear();
+
+// Game state
+let board, current, human = 'X', ai = 'O', over = false;
+
+// Public controls
+document.addEventListener('keydown', e => { if (e.key.toLowerCase() === 'r') newGame(); });
+$('#new')?.addEventListener('click', newGame);
+$('#aifirst')?.addEventListener('click', () => { newGame(); if (current === ai) aiMove(); });
+
+// ---------- Setup / Render ----------
+function readSelections() {
+  const sel = document.querySelector('input[name="mark"]:checked');
+  human = sel ? sel.value : 'X';
+  ai = (human === 'X' ? 'O' : 'X');
+  current = 'X'; // X always starts
+}
+
+function newGame() {
+  readSelections();
+  board = Array(9).fill(null);
+  over = false;
+  render();
+  statusEl.textContent = current === human ? 'Your move.' : 'AI moves first…';
+  if (current === ai) setTimeout(aiMove, 150);
+}
+
+function render() {
+  boardEl.innerHTML = '';
+  board.forEach((val, i) => {
+    const b = document.createElement('button');
+    b.className = 'cell' + (val ? (' ' + val.toLowerCase()) : '');
+    b.setAttribute('role', 'gridcell');
+    b.setAttribute('aria-label', 'cell ' + (i + 1));
+    b.textContent = val || '';
+    b.addEventListener('click', () => play(i));
+    boardEl.appendChild(b);
+  });
+}
+
+function play(i) {
+  if (over || board[i] || current !== human) return;
+  board[i] = human;
+  current = ai;
+  render();
+  const w = winner(board);
+  if (w) { finish(w); return; }
+  statusEl.textContent = 'AI thinking…';
+  setTimeout(aiMove, 80);
+}
+
+function finish(code) {
+  over = true;
+  if (code === 'D') statusEl.textContent = 'Draw.';
+  else if (code === human) statusEl.textContent = 'You win! 🎉';
+  else statusEl.textContent = 'AI wins. 🤖';
+}
+
+// ---------- Rules ----------
+const LINES = [
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
+
+function winner(b) {
+  for (const [a, c, d] of LINES) if (b[a] && b[a] === b[c] && b[a] === b[d]) return b[a];
+  return b.every(Boolean) ? 'D' : null;
+}
+const empties = b => b.map((v,i)=> v ? null : i).filter(i=> i !== null);
+const other = m => m === 'X' ? 'O' : 'X';
+
+// ---------- Strong AI: Minimax with Alpha-Beta ----------
+const ORDER = [4,0,2,6,8,1,3,5,7]; // try center, corners, sides
+
+// Evaluate terminal states from the AI's perspective.
+// Depth bonus encourages quicker wins / slower losses.
+function terminalScore(b, aiMark, depth) {
+  const w = winner(b);
+  if (!w) return null;
+  if (w === 'D') return 0;
+  return (w === aiMark) ? (10 - depth) : (-10 + depth);
+}
+
+function bestMoveMinimax(b, aiMark) {
+  // Take immediate win if available.
+  for (const i of ORDER.filter(i => !b[i])) {
+    b[i] = aiMark;
+    if (winner(b) === aiMark) { b[i] = null; return i; }
+    b[i] = null;
+  }
+  // Otherwise, minimax search (AI maximizes).
+  let best = null, bestScore = -Infinity;
+  let alpha = -Infinity, beta = Infinity;
+
+  for (const i of ORDER.filter(i => !b[i])) {
+    b[i] = aiMark;
+    const sc = minimax(b, /*player=*/other(aiMark), aiMark, /*maximizing=*/false, /*depth=*/1, alpha, beta);
+    b[i] = null;
+    if (sc > bestScore) { bestScore = sc; best = i; }
+    alpha = Math.max(alpha, sc);
+  }
+  return best;
+}
+
+function minimax(b, player, aiMark, maximizing, depth, alpha, beta) {
+  const ts = terminalScore(b, aiMark, depth);
+  if (ts !== null) return ts;
+
+  const legal = ORDER.filter(i => !b[i]);
+  if (maximizing) {
+    // AI's turn
+    let val = -Infinity;
+    for (const i of legal) {
+      b[i] = aiMark;
+      val = Math.max(val, minimax(b, other(aiMark), aiMark, false, depth + 1, alpha, beta));
+      b[i] = null;
+      alpha = Math.max(alpha, val);
+      if (alpha >= beta) break;
+    }
+    return val;
+  } else {
+    // Human's turn (minimizing)
+    const humanMark = other(aiMark);
+    let val = Infinity;
+    for (const i of legal) {
+      b[i] = humanMark;
+      val = Math.min(val, minimax(b, aiMark, aiMark, true, depth + 1, alpha, beta));
+      b[i] = null;
+      beta = Math.min(beta, val);
+      if (alpha >= beta) break;
+    }
+    return val;
+  }
+}
+
+function aiMove() {
+  if (over) return;
+  const move = bestMoveMinimax(board, ai);
+  if (move == null) { finish('D'); return; }
+  board[move] = ai;
+  current = human;
+  render();
+  const w = winner(board);
+  if (w) { finish(w); return; }
+  statusEl.textContent = 'Your move.';
+}
+
+// ---------- Boot ----------
+newGame();
+</script>
+</body>
+</html>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>RJ Edwards | Data Science & Software Engineering Portfolio</title>
+  <meta name="description"
+    content="RJ Edwards — Data Science and Computer Science student at UW–Madison. Portfolio, projects, experience, and contact." />
+  <meta name="robots" content="index,follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="RJ Edwards | Portfolio" />
+  <meta property="og:description"
+    content="Data Science • Computer Science • Leadership. Projects, experience, and contact." />
+  <meta property="og:type" content="website" />
+
+  <!-- Optional: If you deploy under a real domain, set these -->
+  <!-- <link rel="canonical" href="https://yourdomain.com/" /> -->
+  <!-- <meta property="og:url" content="https://yourdomain.com/" /> -->
+  <!-- <meta property="og:image" content="https://yourdomain.com/og.png" /> -->
+
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2300d1b2'/%3E%3Ctext x='32' y='41' font-size='28' text-anchor='middle' fill='white' font-family='Segoe UI, Roboto, Arial, sans-serif'%3ER%3C/text%3E%3C/svg%3E" />
+
+  <!-- JSON-LD (helps SEO) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "RJ Edwards",
+    "url": "",
+    "sameAs": [
+      "https://github.com/rjedwardsss",
+      "https://www.linkedin.com/in/rjedwardsss/"
+    ],
+    "jobTitle": "Data Science & Software Engineering Student",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "University of Wisconsin–Madison"
+    }
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #11131a;
+      --elev: #171a22;
+      --text: #e6e6e6;
+      --muted: #a2a7b3;
+      --brand: #38d0c2;
+      --brand-2: #7aa7ff;
+      --accent: #c084fc;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      --shadow-soft: 0 6px 18px rgba(0, 0, 0, .25);
+      --maxw: 1100px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #fafafa;
+        --surface: #ffffff;
+        --elev: #f4f6fb;
+        --text: #0f172a;
+        --muted: #5b6476;
+        --shadow: 0 10px 30px rgba(2, 6, 23, .1);
+        --shadow-soft: 0 6px 18px rgba(2, 6, 23, .08);
+      }
+    }
+
+    [data-theme="light"] {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --elev: #f4f6fb;
+      --text: #0f172a;
+      --muted: #5b6476;
+      --shadow: 0 10px 30px rgba(2, 6, 23, .1);
+      --shadow-soft: 0 6px 18px rgba(2, 6, 23, .08);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b0c10;
+      --surface: #11131a;
+      --elev: #171a22;
+      --text: #e6e6e6;
+      --muted: #a2a7b3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 120% -10%, rgba(56, 208, 194, .25), transparent 60%),
+        radial-gradient(800px 600px at -20% 10%, rgba(122, 167, 255, .18), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.6;
+      letter-spacing: .2px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 1.2rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #051014;
+      padding: .9rem 1.1rem;
+      border-radius: 999px;
+      font-weight: 800;
+      box-shadow: var(--shadow-soft);
+      transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .25);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: rgba(255, 255, 255, .12);
+      box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      background: rgba(255, 255, 255, .06);
+    }
+
+    /* NAV */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: saturate(120%) blur(8px);
+      background: color-mix(in oklab, var(--bg) 86%, transparent);
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .nav .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+
+    .brand .logo {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #031016;
+      font-weight: 900;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .nav a.active {
+      color: var(--text);
+    }
+
+    .nav .links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      border: 1px solid rgba(255, 255, 255, .15);
+      border-radius: 999px;
+      padding: .35rem .65rem;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-weight: 800;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 8rem 0 5rem;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .kicker {
+      color: var(--brand);
+      font-weight: 900;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      font-size: .9rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      line-height: 1.05;
+      margin: .3rem 0 1rem;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      max-width: 60ch;
+    }
+
+    .cta {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: .8rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, var(--surface), var(--elev));
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .hero-card .stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .8rem 1rem;
+      background: rgba(255, 255, 255, .03);
+      border-radius: 12px;
+      margin: .5rem 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .3rem .6rem;
+      border-radius: 999px;
+      background: rgba(122, 167, 255, .12);
+      color: var(--brand-2);
+      font-weight: 800;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 4rem 0;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      margin: 0 0 1.2rem;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      max-width: 70ch;
+      margin-bottom: 1.5rem;
+    }
+
+    /* EXPERIENCE logo wall */
+    .logo-wall {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      /* max 5 per row on desktop */
+      gap: 1.2rem;
+      margin-top: 1.2rem;
+      align-items: center;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .logo-wall li {
+      list-style: none;
+    }
+
+    /* Each logo tile is a fixed square so all rows line up */
+    .logo-item {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      overflow: hidden;
+      /* ensures image stays inside */
+      text-decoration: none;
+    }
+
+    /* Make every image fill the tile the same way */
+    .logo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* uniform tiles */
+      display: block;
+      border-radius: 18px;
+    }
+
+    /* Responsive: fewer columns as screen shrinks */
+    @media (max-width: 980px) {
+      .logo-wall {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .logo-wall {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+
+
+
+
+
+    /* SKILLS */
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .meter {
+      background: var(--elev);
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .meter .bar {
+      height: 10px;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      width: 70%;
+    }
+
+    /* CONTACT */
+    .contact {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 1.8rem;
+    }
+
+    .panel input,
+    .panel textarea {
+      width: 100%;
+      padding: .85rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: var(--elev);
+      color: var(--text);
+      outline: none;
+    }
+
+    .panel textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+    }
+
+    /* button style for the form submit */
+    button[type="submit"] {
+      border: 1px solid rgba(255, 255, 255, .12);
+    }
+
+    /* photo */
+    .photo-panel {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-photo {
+      width: 260px;
+      height: auto;
+      border-radius: 16px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 208, 194, 0.15);
+      transition: transform 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
+      filter: brightness(0.95) contrast(1.05);
+    }
+
+    .profile-photo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 28px rgba(122, 167, 255, 0.3);
+      filter: brightness(1) contrast(1.1);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2.5rem 0 3rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    /* tiny animations */
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    [data-animate].in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .skills {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contact {
+        grid-template-columns: 1fr;
+      }
+
+      .logo-wall {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .skills {
+        grid-template-columns: 1fr;
+      }
+
+      .nav .links {
+        display: none;
+      }
+
+      .logo-wall {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="container inner">
+      <a class="brand" href="/" aria-label="Home">
+        <span class="logo">RJ</span>
+        <span>RJ Edwards</span>
+      </a>
+
+      <nav class="links" aria-label="Primary">
+        <a href="/" class="active">Home</a>
+        <a href="projects/">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙 <span
+            class="label">Dark</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero container">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker" data-animate>Data Science • Computer Science • Leadership</div>
+          <h1 data-animate style="transition-delay:.08s">Hi, I'm RJ. I build useful, delightful things with data & code.
+          </h1>
+
+          <p class="sub" data-animate style="transition-delay:.12s">
+            I’m a Computer Science and Data Science student at the University of Wisconsin–Madison passionate about
+            technology, analytics,
+            and turning data into impactful solutions. My work spans software development, AI/ML experimentation, and
+            leadership.
+          </p>
+
+          <div class="cta" data-animate style="transition-delay:.16s">
+            <a class="button" href="projects/">View Projects</a>
+            <a class="button secondary" href="https://github.com/rjedwardsss" target="_blank"
+              rel="noreferrer noopener">GitHub</a>
+            <a class="button" href="https://www.linkedin.com/in/rjedwardsss/" target="_blank"
+              rel="noreferrer noopener">LinkedIn</a>
+          </div>
+        </div>
+
+        <aside>
+          <div class="hero-card" data-animate>
+            <div class="stat"><strong>Current Focus</strong><span class="pill">Data • ML • Web</span></div>
+            <div class="stat"><strong>Education</strong><span>University of Wisconsin–Madison</span></div>
+            <div class="stat"><strong>Credentials</strong><span>Data Science, B.S.</span></div>
+            <div class="stat"><strong>Location</strong><span>Moreno Valley, CA · Remote OK</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Experience = Logo wall -->
+    <section id="experience">
+      <div class="container">
+        <h2 data-animate>Experience</h2>
+        <p class="section-sub" data-animate style="transition-delay:.06s">
+          Companies and organizations I’ve worked with. For even more detailed roles and responsibilities, see my
+          LinkedIn. Click the logos to learn more.
+        </p>
+
+        <div class="logo-wall" aria-label="Organizations worked with">
+
+          <li>
+            <a class="logo-item" href="https://stagekeep.com/" target="_blank" rel="noreferrer noopener"
+              aria-label="StageKeep">
+              <img src="experience/stagekeep.png" alt="StageKeep" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.steppy.ai/" target="_blank" rel="noreferrer noopener"
+              aria-label="Steppy AI">
+              <img src="experience/steppyai.png" alt="Steppy AI" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.wisc.edu/" target="_blank" rel="noreferrer noopener"
+              aria-label="University of Wisconsin–Madison">
+              <img src="experience/uwmadison.png" alt="University of Wisconsin–Madison" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.hunterirrigation.com/" target="_blank" rel="noreferrer noopener"
+              aria-label="Hunter Industries">
+              <img src="experience/hunterindustries.jpeg" alt="Hunter Industries" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.joinsaturn.com/" target="_blank" rel="noreferrer noopener"
+              aria-label="Saturn Technologies">
+              <img src="experience/saturnapp.jpeg" alt="Saturn Technologies" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://alphasig.org/" target="_blank" rel="noreferrer noopener"
+              aria-label="Alpha Sigma Phi Fraternity">
+              <img src="experience/alphasig.jpeg" alt="Alpha Sigma Phi Fraternity" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.rcoe.us/" target="_blank" rel="noreferrer noopener"
+              aria-label="RCOE">
+              <img src="experience/riversideofficeofeducation.jpg" alt="RCOE" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.redcross.org/" target="_blank" rel="noreferrer noopener"
+              aria-label="American Red Cross">
+              <img src="experience/americanredcross.jpg" alt="American Red Cross" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.moval.org/mv-library/" target="_blank" rel="noreferrer noopener"
+              aria-label="Moreno Valley Public Library">
+              <img src="experience/morenovalleylibrary.jpg" alt="Moreno Valley Public Library" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="http://www.humorology.org/" target="_blank" rel="noreferrer noopener"
+              aria-label="Humorology">
+              <img src="experience/humorology.png" alt="Humorology" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.instagram.com/vvhs.cshonorsociety/" target="_blank"
+              rel="noreferrer noopener" aria-label="Valley View High School Computer Science Honor Society">
+              <img src="experience/vvhs computer science honor society.jpg"
+                alt="Valley View High School Computer Science Honor Society" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://valleyview.mvusd.net/" target="_blank" rel="noreferrer noopener"
+              aria-label="Valley View High School">
+              <img src="experience/valleyview.png" alt="Valley View High School" loading="lazy" />
+            </a>
+          </li>
+
+          <li>
+            <a class="logo-item" href="https://www.nationalhonorsociety.org/" target="_blank" rel="noreferrer noopener"
+              aria-label="National Honor Society">
+              <img src="experience/nationalhonorsociety.png" alt="National Honor Society" loading="lazy" />
+            </a>
+          </li>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container">
+        <h2 data-animate>Technical Skills</h2>
+        <div class="skills">
+          <div class="panel" data-animate>
+            <strong>Python</strong>
+            <div class="meter" aria-label="Python proficiency meter">
+              <div class="bar" style="width:85%"></div>
+            </div>
+            <p class="section-sub">NumPy, Pandas, scikit-learn</p>
+          </div>
+
+          <div class="panel" data-animate style="transition-delay:.05s">
+            <strong>Java</strong>
+            <div class="meter" aria-label="Java proficiency meter">
+              <div class="bar" style="width:70%"></div>
+            </div>
+            <p class="section-sub">OOP, algorithms, data structures</p>
+          </div>
+
+          <div class="panel" data-animate style="transition-delay:.1s">
+            <strong>Web</strong>
+            <div class="meter" aria-label="Web proficiency meter">
+              <div class="bar" style="width:75%"></div>
+            </div>
+            <p class="section-sub">HTML, CSS, JavaScript, APIs</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <h2 data-animate>Contact Me</h2>
+        <div class="contact">
+          <div class="panel" data-animate>
+            <form action="https://formspree.io/f/mreepybw" method="POST">
+              <!-- Optional: redirect after submit -->
+              <!-- <input type="hidden" name="_redirect" value="https://yourdomain.com/thanks.html"> -->
+
+              <!-- Optional: spam honeypot (bots fill this, humans won’t) -->
+              <input type="text" name="_gotcha" style="display:none">
+
+              <div class="grid-2">
+                <div>
+                  <label for="name">Name</label>
+                  <input id="name" name="name" placeholder="Please enter your name." required />
+                </div>
+                <div>
+                  <label for="email">Email</label>
+                  <input type="email" name="email" placeholder="Please enter your email." required />
+                </div>
+                <div>
+                  <label for="subject">Subject</label>
+                  <input id="subject" name="subject" placeholder="Please enter the subject." required />
+                </div>
+              </div>
+
+              <div style="margin:.8rem 0">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Please enter your message here."
+                  required></textarea>
+              </div>
+
+              <div class="cta">
+                <button class="button secondary" type="submit">Send Email</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="panel photo-panel" data-animate style="transition-delay:.05s">
+            <img src="contact/profile.jpg" alt="RJ Edwards headshot" class="profile-photo" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <div>© <span id="year"></span> RJ Edwards. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection animations
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: .2 });
+    document.querySelectorAll('[data-animate]').forEach(el => io.observe(el));
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Theme toggle with preference persistence
+    const root = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    const applyTheme = (t) => {
+      root.setAttribute('data-theme', t);
+      toggle.querySelector('.label').textContent = t === 'dark' ? 'Dark' : 'Light';
+      toggle.firstChild.textContent = t === 'dark' ? '🌙' : '☀️';
+    };
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(stored || (prefersDark ? 'dark' : 'light'));
+    toggle.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', next);
+      applyTheme(next);
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Chapter Ops Dashboard • RJ Edwards</title>
+<meta name="description" content="Lightweight chapter operations dashboard—members, dues, events, and tasks. No backend required."/>
+<style>
+  :root{
+    --bg:#0b0c10; --surface:#11131a; --elev:#171a22; --text:#e6e6e6; --muted:#a2a7b3;
+    --brand:#38d0c2; --brand-2:#7aa7ff; --accent:#c084fc; --radius:16px;
+    --shadow:0 10px 30px rgba(0,0,0,.35); --shadow-soft:0 6px 18px rgba(0,0,0,.25);
+    --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#fafafa; --surface:#ffffff; --elev:#f4f6fb; --text:#0f172a; --muted:#5b6476;
+      --shadow:0 10px 30px rgba(2,6,23,.1); --shadow-soft:0 6px 18px rgba(2,6,23,.08); }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    background:
+      radial-gradient(1200px 800px at 120% -10%, rgba(56,208,194,.25), transparent 60%),
+      radial-gradient(800px 600px at -20% 10%, rgba(122,167,255,.18), transparent 60%),
+      var(--bg);
+    color:var(--text); line-height:1.6; letter-spacing:.2px;
+  }
+  header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(120%) blur(8px);
+    background: color-mix(in oklab, var(--bg) 86%, transparent);
+    border-bottom:1px solid rgba(255,255,255,.06);}
+  .container{ max-width:1100px; margin:0 auto; padding:0 1.2rem;}
+  .nav{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ display:flex; gap:.7rem; align-items:center; font-weight:800}
+  .logo{ width:32px;height:32px; display:grid; place-items:center; border-radius:10px;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#031016; box-shadow:var(--shadow-soft);}
+  .button{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid transparent;
+    background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#051014; padding:.6rem .9rem;
+    border-radius:999px; font-weight:700; box-shadow:var(--shadow-soft); cursor:pointer;}
+  .button.secondary{ background:transparent; color:var(--text); border-color:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.14);}
+  .chip{ display:inline-flex; align-items:center; gap:.35rem; padding:.25rem .6rem; border-radius:999px; background:rgba(255,255,255,.06); color:var(--muted); font-size:.9rem; border:1px solid rgba(255,255,255,.08)}
+  h1{ font-size:clamp(1.6rem,4vw,2.2rem); margin:.6rem 0 1rem}
+  main{ padding:1.6rem 0 2.2rem;}
+  .grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap:1rem; }
+  .panel{ background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow-soft);}
+  .section-title{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-bottom:.6rem }
+  input, select{ background:var(--elev); color:var(--text); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:.55rem .7rem; outline:none; }
+  table{ width:100%; border-collapse:separate; border-spacing:0 8px; }
+  th, td{ text-align:left; padding:.55rem .6rem;}
+  thead th{ color:var(--muted); font-weight:800; font-size:.9rem;}
+  tbody tr{ background:var(--elev); border:1px solid rgba(255,255,255,.08); }
+  tbody tr td:first-child{ border-top-left-radius:10px; border-bottom-left-radius:10px; }
+  tbody tr td:last-child{ border-top-right-radius:10px; border-bottom-right-radius:10px; }
+  .status{ display:inline-flex; align-items:center; gap:.35rem; padding:.2rem .55rem; border-radius:999px; font-weight:700; font-size:.85rem; }
+  .paid{ background:rgba(34,197,94,.12); color:#22c55e; border:1px solid rgba(34,197,94,.35);}
+  .partial{ background:rgba(245,158,11,.12); color:#f59e0b; border:1px solid rgba(245,158,11,.35);}
+  .due{ background:rgba(239,68,68,.12); color:#ef4444; border:1px solid rgba(239,68,68,.35);}
+  .row{ display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+  .totals{ display:flex; gap:.6rem; flex-wrap:wrap; color:var(--muted); }
+  .pill{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:999px; padding:.25rem .6rem; }
+  .cols{ display:grid; grid-template-columns: repeat(3, 1fr); gap:.7rem; }
+  .kanban{ display:grid; grid-template-columns: repeat(3,1fr); gap:.7rem; }
+  .col{ background:var(--elev); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:.6rem; min-height:170px; }
+  .task{ background:var(--surface); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:.5rem .6rem; margin:.4rem 0; cursor:grab; }
+  .event{ background:var(--elev); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:.6rem; display:grid; gap:.35rem; }
+  .event strong{ font-weight:800;}
+  .event small{ color:var(--muted); }
+  .rsvp button{ padding:.35rem .55rem; border-radius:8px; border:1px solid rgba(255,255,255,.14); background:transparent; color:var(--text); cursor:pointer; }
+  .rsvp .yes{ border-color: rgba(34,197,94,.45); } .rsvp .no{ border-color: rgba(239,68,68,.45); } .rsvp .maybe{ border-color: rgba(245,158,11,.45); }
+  .empty{ color:var(--muted); font-style:italic; }
+  .right{ margin-left:auto; }
+  .bar{ height:10px; background:linear-gradient(90deg, var(--brand), var(--accent)); border-radius:999px; }
+  .bar-wrap{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:999px; overflow:hidden; }
+  .small{ font-size:.9rem; color:var(--muted); }
+  @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+
+
+  /* ===== Dashboard polish ===== */
+
+/* Panels: subtle glass/gradient, tighter radius, stronger shadow */
+.panel{
+  background:
+    radial-gradient(1200px 600px at 120% -10%, rgba(56,208,194,.06), transparent 60%),
+    radial-gradient(800px 600px at -20% 10%, rgba(122,167,255,.06), transparent 60%),
+    color-mix(in oklab, var(--surface) 92%, transparent);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.28);
+  padding: 1.1rem;
+}
+
+/* Section headers: make them “card headers” */
+.section-title{
+  padding: .4rem .5rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+/* Inputs: bigger hit-area, focus ring */
+input, select{
+  padding:.65rem .8rem;
+  border-radius: 12px;
+  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+input:focus, select:focus{
+  box-shadow: 0 0 0 3px rgba(122,167,255,.25);
+  border-color: rgba(122,167,255,.55);
+}
+
+/* Buttons: lighter secondary, hover pop */
+.button{
+  transform: translateY(0);
+  transition: transform .12s ease, box-shadow .15s ease, opacity .15s ease, background .2s ease;
+}
+.button:hover{ transform: translateY(-1px); box-shadow: 0 12px 26px rgba(0,0,0,.28); }
+.button.secondary{
+  background: rgba(255,255,255,.04);
+}
+.button.secondary:hover{
+  background: rgba(255,255,255,.08);
+}
+
+/* Table: compact rows, hover row, sticky header look */
+table{ border-spacing: 0 10px; }
+tbody tr{ transition: background .15s ease, transform .05s ease; }
+tbody tr:hover{ background: color-mix(in oklab, var(--elev) 96%, transparent); transform: translateY(-1px); }
+
+/* Status badges: tiny glow + icon-y look */
+.status{ letter-spacing:.02em; }
+.paid    { box-shadow: inset 0 0 0 1px rgba(34,197,94,.35), 0 0 0 3px rgba(34,197,94,.10); }
+.partial { box-shadow: inset 0 0 0 1px rgba(245,158,11,.35), 0 0 0 3px rgba(245,158,11,.10); }
+.due     { box-shadow: inset 0 0 0 1px rgba(239,68,68,.35), 0 0 0 3px rgba(239,68,68,.10); }
+
+/* Totals bar: animated stripe when 0%<x<100% */
+.bar-wrap{ position: relative; height:12px; }
+.bar{
+  height:100%;
+  border-radius:999px;
+  background-image: linear-gradient(90deg, var(--brand), var(--accent));
+  position: relative;
+  overflow:hidden;
+}
+.bar::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.12) 0 8px, transparent 8px 16px);
+  animation: stripe 1.2s linear infinite;
+  opacity:.35;
+}
+@keyframes stripe{ to { transform: translateX(32px); } }
+.bar[data-complete="true"]::after{ display:none; } /* hide stripes at 100% */
+
+/* RSVP buttons: clearer active state */
+.rsvp button{
+  transition: background .12s ease, transform .05s ease, border-color .12s ease;
+}
+.rsvp button:hover{ transform: translateY(-1px); }
+.rsvp .yes[style*="background"]{ background: rgba(34,197,94,.16) !important; }
+.rsvp .maybe[style*="background"]{ background: rgba(245,158,11,.16) !important; }
+.rsvp .no[style*="background"]{ background: rgba(239,68,68,.16) !important; }
+
+/* Kanban cards: drag affordance + subtle separator */
+.task{
+  display:flex; align-items:center; gap:.5rem;
+}
+.task::before{
+  content:"⋮⋮";
+  font-weight:900; opacity:.25;
+}
+
+/* Chips: less gray, more contrast */
+.chip{ color: color-mix(in oklab, var(--text) 80%, var(--muted)); }
+
+/* Small helpers */
+.small{ font-size:.88rem; }
+
+/* Make the whole grid breathe on narrow screens */
+@media (max-width: 980px){
+  .container{ padding: 0 .9rem; }
+  .panel{ padding: .9rem; }
+}
+
+/* ===== RSVP section polish ===== */
+
+.event { gap: .6rem; }
+
+.event .stats {
+  display: flex; flex-wrap: wrap; gap: .5rem;
+}
+.event .badge {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.attendees {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .45rem;
+}
+
+.attendee {
+  display: grid;
+  grid-template-columns: 1.5fr repeat(3, 108px);
+  gap: .45rem;
+  align-items: center;
+  padding: .35rem;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 10px;
+}
+
+.attendee .name {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 999px;
+  padding: .35rem .7rem;
+  font-weight: 700;
+  color: #e6e6e6;
+}
+
+.attendee button {
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease, transform .05s ease;
+}
+.attendee button:hover { transform: translateY(-1px); }
+
+/* Active states */
+.attendee .yes.active   { background: rgba(34,197,94,.16);  border-color: rgba(34,197,94,.45); }
+.attendee .maybe.active { background: rgba(245,158,11,.16); border-color: rgba(245,158,11,.45); }
+.attendee .no.active    { background: rgba(239,68,68,.16);  border-color: rgba(239,68,68,.45); }
+
+/* Responsive stacking */
+@media (max-width: 720px){
+  .attendee { grid-template-columns: 1fr; }
+  .attendee button { width: 100%; }
+}
+
+.drag-handle {
+  cursor: grab;
+  width: 32px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+.member-row.dragging {
+  opacity: 0.5;
+  background: rgba(122,167,255,.08);
+}
+.button.danger {
+  border-color: rgba(239,68,68,.45);
+  color: #ef4444;
+}
+.button.danger:hover {
+  background: rgba(239,68,68,.12);
+}
+
+/* Place buttons side-by-side */
+.action-buttons {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.row-actions {
+  text-align: right;
+}
+
+/* Task delete UI */
+.task {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.task .task-del {
+  border: 1px solid rgba(239,68,68,.45);
+  color: #ef4444;
+  background: transparent;
+  border-radius: 8px;
+  padding: .25rem .45rem;
+  cursor: pointer;
+  opacity: .9;
+  transition: background .12s ease, opacity .12s ease, transform .05s ease;
+}
+.task .task-del:hover {
+  background: rgba(239,68,68,.12);
+  transform: translateY(-1px);
+}
+footer{ padding:1.4rem 0 1.6rem; color:var(--muted); border-top:1px solid rgba(255,255,255,.06); text-align:center;}
+</style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="logo">RJ</span><span>RJ Edwards</span></div>
+      <a class="button secondary" href="index.html">← Back to Portfolio</a>
+    </div>
+  </header>
+  
+  <main>
+    <div class="container">
+      <h1>Chapter Operations Dashboard v1.0</h1>
+      <div class="grid">
+        <!-- MEMBERS -->
+        <section class="panel">
+          <div class="section-title">
+            <strong>Members</strong>
+            <div class="row right">
+              <input id="search" placeholder="Search name or role"/>
+              <button class="button secondary" id="addMember">Add</button>
+              <button class="button secondary" id="exportCsv">Export CSV</button>
+            </div>
+          </div>
+          <div class="totals" id="totals"></div>
+          <table aria-label="Members table">
+            <thead>
+              <tr>
+                <th><button class="button secondary" id="sortName" title="Sort by name">Name</button></th>
+                <th>Role</th>
+                <th>Dues</th>
+                <th>Status</th>
+                <th>Paid?</th>
+              </tr>
+            </thead>
+            <tbody id="memberBody"></tbody>
+          </table>
+        </section>
+
+        <!-- EVENTS + TASKS -->
+        <section class="panel">
+          <div class="section-title">
+            <strong>Events</strong>
+            <div class="row right">
+              <input id="eventTitle" placeholder="Event title"/>
+              <input id="eventDate" type="date"/>
+              <button class="button secondary" id="createEvent">Create</button>
+            </div>
+          </div>
+          <div id="events"></div>
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,.08); margin:1rem 0">
+          <div class="section-title">
+            <strong>Tasks</strong>
+            <div class="row right">
+              <input id="taskTitle" placeholder="New task"/>
+              <select id="taskAssignee"></select>
+              <button class="button secondary" id="addTask">Add</button>
+            </div>
+          </div>
+          <div class="kanban">
+            <div class="col" data-col="todo"><strong>Todo</strong><div id="todo"></div></div>
+            <div class="col" data-col="doing"><strong>Doing</strong><div id="doing"></div></div>
+            <div class="col" data-col="done"><strong>Done</strong><div id="done"></div></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>© <span id="yr"></span> RJ Edwards. All rights reserved.</footer>
+
+  <script>
+    // ===== Utilities & Storage =====
+    const $ = s => document.querySelector(s);
+    const $$ = s => [...document.querySelectorAll(s)];
+    const db = {
+      get: (k, fallback) => { try{ return JSON.parse(localStorage.getItem(k)) ?? fallback; } catch { return fallback; } },
+      set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
+    };
+    $('#yr').textContent = new Date().getFullYear();
+
+    // ===== Seed Data (first run) =====
+    const seedMembers = [
+        { id: uid(), name: "Bob Smith", role: "Secretary", dues: 300, paid: 0 },
+        { id: uid(), name: "John Doe", role: "Treasurer", dues: 300, paid: 150 },
+        { id: uid(), name: "RJ Edwards", role: "President", dues: 300, paid: 300 },      
+    ];
+    const seedEvents = [
+      { id: uid(), title:"Chapter Meeting", date: today(3), yes:[], no:[], maybe:[] },
+      { id: uid(), title:"Philanthropy Night", date: today(10), yes:[], no:[], maybe:[] },
+    ];
+    const seedTasks = [
+      { id: uid(), title: "Book room for meeting", assignee: "Bob Smith", col: "done" },
+      { id: uid(), title: "Collect remaining dues", assignee: "John Doe", col: "doing" },
+      { id: uid(), title: "Publish event agenda", assignee: "RJ Edwards", col: "todo" },
+    ];
+
+    const state = {
+      members: db.get('members', seedMembers),
+      events: db.get('events', seedEvents),
+      tasks: db.get('tasks', seedTasks),
+      sortAsc: true
+    };
+
+    // ===== Members =====
+    const memberBody = $('#memberBody');
+    const totalsEl = $('#totals');
+    const searchEl = $('#search');
+
+    function renderMembers(){
+      const q = (searchEl.value||'').toLowerCase();
+      const list = state.members
+        .filter(m => m.name.toLowerCase().includes(q) || m.role.toLowerCase().includes(q))
+        .sort((a,b)=> state.sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+
+      memberBody.innerHTML = '';
+      let totalDues=0, totalPaid=0, countPaid=0, countPartial=0, countDue=0;
+
+      list.forEach(m=>{
+        totalDues += m.dues;
+        totalPaid += m.paid;
+        if(m.paid >= m.dues) countPaid++;
+        else if(m.paid > 0) countPartial++;
+        else countDue++;
+
+        const tr = document.createElement('tr');
+        tr.classList.add('member-row');
+tr.draggable = true;
+tr.innerHTML = `
+  <td class="drag-handle" title="Drag to reorder">☰</td>
+  <td><strong>${m.name}</strong></td>
+  <td>${m.role}</td>
+  <td>$${m.dues}</td>
+  <td>${statusBadge(m)}</td>
+  <td class="row-actions">
+  <div class="action-buttons">
+    <button class="button secondary" data-pay="${m.id}">
+      ${m.paid>=m.dues?'Mark Unpaid':'Mark Paid'}
+    </button>
+    <button class="button secondary danger" data-remove="${m.id}">Remove</button>
+  </div>
+</td>
+`;
+
+        memberBody.appendChild(tr);
+      });
+
+      const pct = totalDues? Math.round((totalPaid/totalDues)*100) : 0;
+      totalsEl.innerHTML = `
+        <span class="pill">Total dues: <strong>$${totalDues}</strong></span>
+        <span class="pill">Collected: <strong>$${totalPaid}</strong> (${pct}%)</span>
+        <span class="pill">Paid: <strong>${countPaid}</strong></span>
+        <span class="pill">Partial: <strong>${countPartial}</strong></span>
+        <span class="pill">Due: <strong>${countDue}</strong></span>
+        <div class="bar-wrap" style="flex:1; min-width:180px;"><div class="bar" style="width:${pct}%"></div></div>
+      `;
+
+      // attach pay handlers
+      $$('button[data-pay]').forEach(btn=>{
+        btn.onclick = () => {
+          const id = btn.getAttribute('data-pay');
+          const m = state.members.find(x=>x.id===id);
+          if(!m) return;
+          if(m.paid < m.dues) m.paid = m.dues;
+          else m.paid = 0;
+          db.set('members', state.members);
+          renderMembers();
+          renderTaskAssignees();
+        };
+      });
+    }
+
+
+    // Member removal + reordering
+memberBody.addEventListener('click', e => {
+  const removeId = e.target.getAttribute('data-remove');
+  if (removeId) {
+    if (confirm('Remove this member?')) {
+      state.members = state.members.filter(m => m.id !== removeId);
+      db.set('members', state.members);
+      renderMembers();
+      renderTaskAssignees();
+    }
+  }
+});
+
+// Drag and drop reorder
+let dragSrc = null;
+memberBody.addEventListener('dragstart', e => {
+  const row = e.target.closest('.member-row');
+  if (!row) return;
+  dragSrc = row;
+  row.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+});
+memberBody.addEventListener('dragend', e => {
+  e.target.classList.remove('dragging');
+});
+memberBody.addEventListener('dragover', e => {
+  e.preventDefault();
+  const after = getDragAfterElement(memberBody, e.clientY);
+  const dragging = document.querySelector('.member-row.dragging');
+  if (!dragging) return;
+  if (after == null) memberBody.appendChild(dragging);
+  else memberBody.insertBefore(dragging, after);
+});
+function getDragAfterElement(container, y) {
+  const rows = [...container.querySelectorAll('.member-row:not(.dragging)')];
+  return rows.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    return offset < 0 && offset > closest.offset ? { offset, element: child } : closest;
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+
+
+    function statusBadge(m){
+      if(m.paid >= m.dues) return `<span class="status paid">Paid</span>`;
+      if(m.paid > 0) return `<span class="status partial">Partial</span>`;
+      return `<span class="status due">Due</span>`;
+    }
+
+    $('#sortName').onclick = ()=>{ state.sortAsc = !state.sortAsc; renderMembers(); };
+    searchEl.oninput = ()=> renderMembers();
+    $('#addMember').onclick = ()=>{
+      const name = prompt('Member name'); if(!name) return;
+      const role = prompt('Role (e.g., Member, Treasurer)') || 'Member';
+      const dues = parseInt(prompt('Dues amount (e.g., 300)'), 10) || 300;
+      state.members.push({ id: uid(), name, role, dues, paid: 0 });
+      db.set('members', state.members);
+      renderMembers(); renderTaskAssignees();
+    };
+    $('#exportCsv').onclick = ()=>{
+      const rows = [['Name','Role','Dues','Paid','Status']];
+      state.members.forEach(m=>{
+        const status = (m.paid>=m.dues)?'Paid':(m.paid>0?'Partial':'Due');
+        rows.push([m.name, m.role, m.dues, m.paid, status]);
+      });
+      downloadCsv('members.csv', rows);
+    };
+
+    // ===== Events =====
+    const eventsEl = $('#events');
+    function renderEvents(){
+      eventsEl.innerHTML = '';
+      if(!state.events.length){
+        eventsEl.innerHTML = `<div class="empty">No events yet.</div>`;
+        return;
+      }
+      state.events
+        .slice()
+        .sort((a,b)=> (a.date||'').localeCompare(b.date||''))
+        .forEach(ev=>{
+          const total = state.members.length || 1;
+          const yes = ev.yes.length, maybe = ev.maybe.length, no = ev.no.length;
+          const pct = Math.round((yes/total)*100);
+          const div = document.createElement('div');
+          div.className = 'event';
+          div.innerHTML = `
+  <div class="row" style="justify-content:space-between;">
+    <div>
+      <strong>${ev.title}</strong><br/>
+      <small>${fmtDate(ev.date)}</small>
+    </div>
+    <button class="button secondary" data-del="${ev.id}">Delete</button>
+  </div>
+
+  <div class="stats">
+    <span class="badge">Yes: ${yes}</span>
+    <span class="badge">Maybe: ${maybe}</span>
+    <span class="badge">No: ${no}</span>
+    <span class="badge">Attending: ${pct}%</span>
+  </div>
+
+  <div class="attendees">
+    ${state.members.map(m => attendeeRow(ev, m)).join('')}
+  </div>
+`;
+
+          eventsEl.appendChild(div);
+        });
+      $$('button[data-del]').forEach(b=>{
+        b.onclick = ()=>{ state.events = state.events.filter(e=>e.id!==b.getAttribute('data-del')); db.set('events', state.events); renderEvents(); };
+      });
+    }
+    function attendeeRow(ev, m){
+  const yes = ev.yes.includes(m.id);
+  const maybe = ev.maybe.includes(m.id);
+  const no = ev.no.includes(m.id);
+  return `
+    <div class="attendee">
+      <span class="name">${m.name}</span>
+      <button class="yes ${yes ? 'active' : ''}"   data-rsvp="${ev.id}" data-member="${m.id}" data-val="yes">Yes</button>
+      <button class="maybe ${maybe ? 'active' : ''}" data-rsvp="${ev.id}" data-member="${m.id}" data-val="maybe">Maybe</button>
+      <button class="no ${no ? 'active' : ''}"     data-rsvp="${ev.id}" data-member="${m.id}" data-val="no">No</button>
+    </div>
+  `;
+}
+
+    $('#createEvent').onclick = ()=>{
+      const title = $('#eventTitle').value.trim();
+      const date = $('#eventDate').value || today(7);
+      if(!title) return alert('Please enter a title');
+      state.events.push({ id: uid(), title, date, yes:[], no:[], maybe:[] });
+      db.set('events', state.events); $('#eventTitle').value=''; renderEvents();
+    };
+    eventsEl.addEventListener('click', (e)=>{
+      const t = e.target;
+      if(!t.dataset || !t.dataset.rsvp) return;
+      const ev = state.events.find(x=>x.id===t.dataset.rsvp); if(!ev) return;
+      const member = t.dataset.member, val = t.dataset.val;
+      ['yes','maybe','no'].forEach(k=> ev[k]=ev[k].filter(id=>id!==member));
+      ev[val].push(member);
+      db.set('events', state.events); renderEvents();
+    });
+
+    // ===== Tasks (Kanban) =====
+    const cols = { todo: $('#todo'), doing: $('#doing'), done: $('#done') };
+    function renderTasks(){
+  Object.values(cols).forEach(c=>c.innerHTML='');
+  state.tasks.forEach(task=>{
+    const el = document.createElement('div');
+    el.className = 'task';
+    el.draggable = true;
+    el.dataset.id = task.id;
+
+    // left text
+    const text = document.createElement('div');
+    text.textContent = `${task.title} — ${task.assignee}`;
+    el.appendChild(text);
+
+    // delete button only in "done"
+    if (task.col === 'done') {
+      const del = document.createElement('button');
+      del.className = 'task-del';
+      del.setAttribute('data-del-task', task.id);
+      del.title = 'Remove task';
+      del.textContent = '✕';
+      el.appendChild(del);
+    }
+
+    el.addEventListener('dragstart', dragStart);
+    cols[task.col]?.appendChild(el);
+  });
+}
+
+// Per-task delete (event delegation on the kanban container)
+document.querySelector('.kanban').addEventListener('click', (e)=>{
+  const id = e.target?.getAttribute?.('data-del-task');
+  if (!id) return;
+  state.tasks = state.tasks.filter(t => t.id !== id);
+  db.set('tasks', state.tasks);
+  renderTasks();
+});
+
+// Optional: Clear Done button
+document.getElementById('clearDone')?.addEventListener('click', ()=>{
+  const hadDone = state.tasks.some(t => t.col === 'done');
+  if (!hadDone) return;
+  if (!confirm('Remove all tasks in Done?')) return;
+  state.tasks = state.tasks.filter(t => t.col !== 'done');
+  db.set('tasks', state.tasks);
+  renderTasks();
+});
+
+
+    function dragStart(e){ e.dataTransfer.setData('text/plain', e.target.dataset.id); }
+    $$('.col').forEach(c=>{
+      c.addEventListener('dragover', e=> e.preventDefault());
+      c.addEventListener('drop', e=>{
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        const t = state.tasks.find(x=>x.id===id); if(!t) return;
+        t.col = c.dataset.col;
+        db.set('tasks', state.tasks);
+        renderTasks();
+      });
+    });
+    $('#addTask').onclick = ()=>{
+      const title = $('#taskTitle').value.trim(); if(!title) return;
+      const assignee = $('#taskAssignee').value || 'Unassigned';
+      state.tasks.push({ id: uid(), title, assignee, col:'todo' });
+      db.set('tasks', state.tasks); $('#taskTitle').value=''; renderTasks();
+    };
+    function renderTaskAssignees(){
+      const el = $('#taskAssignee'); el.innerHTML='';
+      state.members.forEach(m=> el.append(new Option(m.name, m.name)));
+    }
+
+    // ===== Helpers =====
+    function uid(){ return Math.random().toString(36).slice(2,9); }
+    function today(offset=0){ const d = new Date(Date.now()+offset*86400000); return d.toISOString().slice(0,10); }
+    function fmtDate(s){ if(!s) return '—'; const d=new Date(s+'T00:00:00'); return d.toLocaleDateString([], {month:'short', day:'numeric', year:'numeric'}); }
+    function downloadCsv(filename, rows){
+      const csv = rows.map(r=> r.map(v=> `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'}); const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
+    }
+
+    /* ===== Micro UX improvements ===== */
+
+// Focus search with "/" like Notion
+document.addEventListener('keydown', (e)=>{
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    const s = document.getElementById('search');
+    if (s) s.focus();
+  }
+});
+
+// Friendly “toast” for CSV export & quick actions
+function toast(msg){
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    background: rgba(17,19,26,.95); color: #e6e6e6; padding: .6rem .9rem; border-radius: 10px;
+    border:1px solid rgba(255,255,255,.12); box-shadow: 0 10px 24px rgba(0,0,0,.35); z-index:9999;
+  `;
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; }, 1400);
+  setTimeout(()=> t.remove(), 1750);
+}
+
+// Hook existing buttons (if present)
+const exportBtn = document.getElementById('exportCsv');
+if (exportBtn) exportBtn.addEventListener('click', ()=> toast('CSV exported'));
+
+document.getElementById('addMember')?.addEventListener('click', ()=> toast('Member added'));
+document.getElementById('createEvent')?.addEventListener('click', ()=> toast('Event created'));
+document.getElementById('addTask')?.addEventListener('click', ()=> toast('Task added'));
+
+// Progress bar: hide stripes when at 100%
+(function updateBarStripes(){
+  const wrap = document.querySelector('.bar-wrap .bar');
+  const totals = document.getElementById('totals');
+  if (!wrap || !totals) return;
+  // crude parse of percentage number shown in "Collected: $.. (NN%)"
+  const m = totals.textContent.match(/\((\d+)%\)/);
+  const pct = m ? parseInt(m[1], 10) : 0;
+  if (pct >= 100) wrap.setAttribute('data-complete','true');
+})();
+
+
+    // ===== Boot =====
+    renderMembers();
+    renderEvents();
+    renderTaskAssignees();
+    renderTasks();
+
+    
+  </script>
+</body>
+</html>

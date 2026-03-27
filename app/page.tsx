@@ -761,6 +761,23 @@ export default function Home() {
               <li>
                 <a
                   className="logo-item"
+                  href="https://okaylisa.com/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label="okaylisa"
+                >
+                  <img
+                    src="/experience/okaylisa.jpg"
+                    alt="okaylisa logo"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              </li>
+
+              <li>
+                <a
+                  className="logo-item"
                   href="https://www.steppy.ai/"
                   target="_blank"
                   rel="noreferrer noopener"

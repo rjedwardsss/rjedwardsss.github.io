@@ -669,8 +669,8 @@ export default function Home() {
                 Data Science • Computer Science • Leadership
               </div>
               <h1 data-animate style={{ transitionDelay: ".08s" }}>
-                Hi, I&apos;m RJ. I build useful, delightful things with data &amp;
-                code.
+                Hi, I&apos;m RJ. I build AI systems that interact, adapt, and solve
+                real-world problems.
               </h1>
 
               <p

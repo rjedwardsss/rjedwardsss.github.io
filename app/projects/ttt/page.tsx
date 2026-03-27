@@ -20,10 +20,20 @@ const TTT_STYLES = `
   body{
     margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
     background:
+      linear-gradient(rgba(122,167,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,208,194,.025) 1px, transparent 1px),
       radial-gradient(1200px 800px at 120% -10%, rgba(56,208,194,.25), transparent 60%),
       radial-gradient(800px 600px at -20% 10%, rgba(122,167,255,.18), transparent 60%),
+      radial-gradient(900px 650px at 50% 115%, rgba(56,189,248,.10), rgba(34,211,238,.06), rgba(96,165,250,.04), transparent 66%),
       var(--bg);
+    background-size:36px 36px, 36px 36px, 160% 160%, 160% 160%, 170% 170%, auto;
+    background-position:0 0, 0 0, 0% 0%, 100% 0%, 50% 100%, 0 0;
+    animation:bgDrift 30s ease-in-out infinite alternate;
     color:var(--text); line-height:1.6; letter-spacing:.2px;
+  }
+  @keyframes bgDrift{
+    0%{ background-position:0 0, 0 0, 0% 0%, 100% 0%, 50% 100%, 0 0; }
+    100%{ background-position:0 0, 0 0, 6% 4%, 94% 6%, 48% 96%, 0 0; }
   }
   header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(120%) blur(8px);
     background: color-mix(in oklab, var(--bg) 86%, transparent);

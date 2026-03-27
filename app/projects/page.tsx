@@ -337,7 +337,7 @@ const JSON_LD = {
       description:
         "A browser-based Tic-Tac-Toe AI originally prototyped in Java and re-engineered in JavaScript.",
       author: { "@id": "https://rjedwardsss.github.io/#rj-edwards" },
-      url: "https://rjedwardsss.github.io/projects/ttt.html",
+      url: "https://rjedwardsss.github.io/projects/ttt",
     },
     {
       "@type": "SoftwareApplication",
@@ -347,7 +347,7 @@ const JSON_LD = {
       description:
         "A browser-based Flappy Bird AI using simple neural networks and genetic algorithms, originally prototyped in Python.",
       author: { "@id": "https://rjedwardsss.github.io/#rj-edwards" },
-      url: "https://rjedwardsss.github.io/projects/flappy.html",
+      url: "https://rjedwardsss.github.io/projects/flappy",
     },
     {
       "@type": "SoftwareApplication",
@@ -357,7 +357,7 @@ const JSON_LD = {
       description:
         "A lightweight dashboard for managing chapter operations with tracking for members, dues, events, and tasks.",
       author: { "@id": "https://rjedwardsss.github.io/#rj-edwards" },
-      url: "https://rjedwardsss.github.io/projects/chapter-ops.html",
+      url: "https://rjedwardsss.github.io/projects/chapter-ops",
     },
   ],
 };
@@ -433,7 +433,7 @@ export default function ProjectsPage() {
               <div className="flex">
                 <a
                   className="button"
-                  href="/projects/ttt.html"
+                  href="/projects/ttt"
                   aria-label="Open Tic-Tac-Toe AI demo"
                 >
                   Open Demo
@@ -476,7 +476,7 @@ export default function ProjectsPage() {
               <div className="flex">
                 <a
                   className="button"
-                  href="/projects/flappy.html"
+                  href="/projects/flappy"
                   aria-label="Open Flappy Bird AI demo"
                 >
                   Open Demo
@@ -518,7 +518,7 @@ export default function ProjectsPage() {
               <div className="flex">
                 <a
                   className="button"
-                  href="/projects/chapter-ops.html"
+                  href="/projects/chapter-ops"
                   aria-label="Open Chapter Ops demo"
                 >
                   Open Demo

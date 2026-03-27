@@ -452,11 +452,22 @@ const HOME_STYLES = `
     }
 
     .chip.ask-chip {
-      border: 1px solid rgba(255, 255, 255, .12);
+      background: rgba(255, 255, 255, .06);
+      color: rgba(230, 236, 248, .96);
+      border: 1px solid rgba(56, 189, 248, .22);
       cursor: pointer;
       --ui-lift-y: -1px;
-      --ui-lift-border: rgba(56, 208, 194, .34);
-      --ui-lift-shadow: 0 8px 16px rgba(0, 0, 0, .2);
+      --ui-lift-border: rgba(56, 208, 194, .42);
+      --ui-lift-shadow: 0 8px 16px rgba(0, 0, 0, .22), 0 0 0 1px rgba(56, 208, 194, .14) inset;
+    }
+
+    .chip.ask-chip:hover {
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .chip.ask-chip:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, .45);
+      outline-offset: 2px;
     }
 
     .ask-ai-compose {

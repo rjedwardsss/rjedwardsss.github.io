@@ -230,6 +230,17 @@ const PROJECTS_STYLES = `
       --ui-lift-shadow: 0 24px 40px rgba(0, 0, 0, .26), 0 0 0 1px rgba(56, 208, 194, .12) inset;
     }
 
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+      flex: 1;
+    }
+
+    .card-actions {
+      margin-top: auto;
+    }
+
     .thumb {
       height: 210px;
       border-radius: 12px;
@@ -428,32 +439,34 @@ export default function ProjectsPage() {
                   decoding="async"
                 />
               </div>
-              <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
-                Tic-Tac-Toe AI
-              </h2>
-              <p>
-                A browser-based implementation of a Tic-Tac-Toe AI originally
-                prototyped in Java and re-engineered in JavaScript for seamless
-                play directly in the browser.
-              </p>
-              <p className="impact">
-                Perfect-play decision system responds instantly to every board state.
-              </p>
-              <div className="flex" aria-label="Tech stack">
-                <span className="chip">
-                  <i />
-                  Java
-                </span>
-                <span className="chip">
-                  <i />
-                  JavaScript
-                </span>
-                <span className="chip">
-                  <i />
-                  HTML
-                </span>
+              <div className="card-content">
+                <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
+                  Tic-Tac-Toe AI
+                </h2>
+                <p>
+                  A browser-based implementation of a Tic-Tac-Toe AI originally
+                  prototyped in Java and re-engineered in JavaScript for seamless
+                  play directly in the browser.
+                </p>
+                <p className="impact">
+                  Perfect-play decision system responds instantly to every board state.
+                </p>
+                <div className="flex" aria-label="Tech stack">
+                  <span className="chip">
+                    <i />
+                    Java
+                  </span>
+                  <span className="chip">
+                    <i />
+                    JavaScript
+                  </span>
+                  <span className="chip">
+                    <i />
+                    HTML
+                  </span>
+                </div>
               </div>
-              <div className="flex">
+              <div className="flex card-actions">
                 <a
                   className="button"
                   href="/projects/ttt"
@@ -474,32 +487,34 @@ export default function ProjectsPage() {
                   decoding="async"
                 />
               </div>
-              <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
-                Flappy Bird AI
-              </h2>
-              <p>
-                A browser-based implementation of Flappy Bird using simple neural
-                networks and genetic algorithms that was originally prototyped in
-                Python.
-              </p>
-              <p className="impact">
-                Neuroevolution agents learn to survive longer in real time.
-              </p>
-              <div className="flex" aria-label="Tech stack">
-                <span className="chip">
-                  <i />
-                  Python
-                </span>
-                <span className="chip">
-                  <i />
-                  NumPy
-                </span>
-                <span className="chip">
-                  <i />
-                  ML
-                </span>
+              <div className="card-content">
+                <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
+                  Flappy Bird AI
+                </h2>
+                <p>
+                  A browser-based implementation of Flappy Bird using simple neural
+                  networks and genetic algorithms that was originally prototyped in
+                  Python.
+                </p>
+                <p className="impact">
+                  Neuroevolution agents learn to survive longer in real time.
+                </p>
+                <div className="flex" aria-label="Tech stack">
+                  <span className="chip">
+                    <i />
+                    Python
+                  </span>
+                  <span className="chip">
+                    <i />
+                    NumPy
+                  </span>
+                  <span className="chip">
+                    <i />
+                    ML
+                  </span>
+                </div>
               </div>
-              <div className="flex">
+              <div className="flex card-actions">
                 <a
                   className="button"
                   href="/projects/flappy"
@@ -520,31 +535,33 @@ export default function ProjectsPage() {
                   decoding="async"
                 />
               </div>
-              <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
-                Chapter Ops Dashboard v1.0
-              </h2>
-              <p>
-                A lightweight dashboard for managing chapter operations with
-                interactive tracking of members, dues, events, and tasks.
-              </p>
-              <p className="impact">
-                Interactive operations workflow centralizes chapter decision-making.
-              </p>
-              <div className="flex" aria-label="Tech stack">
-                <span className="chip">
-                  <i />
-                  HTML
-                </span>
-                <span className="chip">
-                  <i />
-                  JavaScript
-                </span>
-                <span className="chip">
-                  <i />
-                  CSS
-                </span>
+              <div className="card-content">
+                <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
+                  Chapter Ops Dashboard v1.0
+                </h2>
+                <p>
+                  A lightweight dashboard for managing chapter operations with
+                  interactive tracking of members, dues, events, and tasks.
+                </p>
+                <p className="impact">
+                  Interactive operations workflow centralizes chapter decision-making.
+                </p>
+                <div className="flex" aria-label="Tech stack">
+                  <span className="chip">
+                    <i />
+                    HTML
+                  </span>
+                  <span className="chip">
+                    <i />
+                    JavaScript
+                  </span>
+                  <span className="chip">
+                    <i />
+                    CSS
+                  </span>
+                </div>
               </div>
-              <div className="flex">
+              <div className="flex card-actions">
                 <a
                   className="button"
                   href="/projects/chapter-ops"

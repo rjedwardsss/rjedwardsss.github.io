@@ -225,13 +225,9 @@ const PROJECTS_STYLES = `
       flex-direction: column;
       gap: .8rem;
       box-shadow: var(--shadow-soft);
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 22px 36px rgba(0, 0, 0, .25);
-      border-color: rgba(255, 255, 255, .16);
+      --ui-lift-y: -6px;
+      --ui-lift-border: rgba(56, 208, 194, .26);
+      --ui-lift-shadow: 0 24px 40px rgba(0, 0, 0, .26), 0 0 0 1px rgba(56, 208, 194, .12) inset;
     }
 
     .thumb {
@@ -260,6 +256,14 @@ const PROJECTS_STYLES = `
       transform: scale(1.02);
     }
 
+    .impact {
+      margin: -.15rem 0 .2rem;
+      color: var(--brand-2);
+      font-weight: 700;
+      font-size: .92rem;
+      letter-spacing: .01em;
+    }
+
     .chip {
       display: inline-flex;
       align-items: center;
@@ -269,6 +273,7 @@ const PROJECTS_STYLES = `
       background: rgba(255, 255, 255, .06);
       color: var(--muted);
       font-size: .85rem;
+      border: 1px solid rgba(255, 255, 255, .08);
     }
 
     .chip i {
@@ -413,7 +418,7 @@ export default function ProjectsPage() {
           </p>
 
           <div className="projects" aria-label="Featured projects list">
-            <article className="card">
+            <article className="card ui-lift">
               <div className="thumb">
                 <img
                   className="thumb-img"
@@ -430,6 +435,9 @@ export default function ProjectsPage() {
                 A browser-based implementation of a Tic-Tac-Toe AI originally
                 prototyped in Java and re-engineered in JavaScript for seamless
                 play directly in the browser.
+              </p>
+              <p className="impact">
+                Perfect-play decision system responds instantly to every board state.
               </p>
               <div className="flex" aria-label="Tech stack">
                 <span className="chip">
@@ -456,7 +464,7 @@ export default function ProjectsPage() {
               </div>
             </article>
 
-            <article className="card">
+            <article className="card ui-lift">
               <div className="thumb">
                 <img
                   className="thumb-img"
@@ -473,6 +481,9 @@ export default function ProjectsPage() {
                 A browser-based implementation of Flappy Bird using simple neural
                 networks and genetic algorithms that was originally prototyped in
                 Python.
+              </p>
+              <p className="impact">
+                Neuroevolution agents learn to survive longer in real time.
               </p>
               <div className="flex" aria-label="Tech stack">
                 <span className="chip">
@@ -499,7 +510,7 @@ export default function ProjectsPage() {
               </div>
             </article>
 
-            <article className="card">
+            <article className="card ui-lift">
               <div className="thumb">
                 <img
                   className="thumb-img"
@@ -515,6 +526,9 @@ export default function ProjectsPage() {
               <p>
                 A lightweight dashboard for managing chapter operations with
                 interactive tracking of members, dues, events, and tasks.
+              </p>
+              <p className="impact">
+                Interactive operations workflow centralizes chapter decision-making.
               </p>
               <div className="flex" aria-label="Tech stack">
                 <span className="chip">

@@ -1,1 +1,17 @@
 /* Home page defines layout and typography in app/page.tsx embedded styles. */
+
+.ui-lift {
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.ui-lift:hover {
+  transform: translateY(var(--ui-lift-y, -3px));
+  border-color: var(--ui-lift-border, rgba(122, 167, 255, .24));
+  box-shadow: var(--ui-lift-shadow, 0 14px 30px rgba(0, 0, 0, .24), 0 0 0 1px rgba(56, 208, 194, .08) inset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-lift {
+    transition: none !important;
+  }
+}

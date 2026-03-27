@@ -4,6 +4,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
+import AskRjAi from "@/components/home/AskRjAi";
 
 const HOME_STYLES = `
     :root {
@@ -296,6 +298,18 @@ const HOME_STYLES = `
     /* SECTIONS */
     section {
       padding: 4rem 0;
+      position: relative;
+      isolation: isolate;
+    }
+
+    section::before {
+      content: "";
+      position: absolute;
+      inset: 10% 0 auto;
+      height: 140px;
+      pointer-events: none;
+      background: radial-gradient(45% 75% at 50% 50%, rgba(56, 208, 194, .06), transparent 72%);
+      z-index: -1;
     }
 
     h2 {
@@ -389,6 +403,9 @@ const HOME_STYLES = `
       border-radius: var(--radius);
       padding: 1.2rem;
       box-shadow: var(--shadow-soft);
+      --ui-lift-y: -3px;
+      --ui-lift-border: rgba(122, 167, 255, .24);
+      --ui-lift-shadow: 0 14px 30px rgba(0, 0, 0, .24), 0 0 0 1px rgba(56, 208, 194, .08) inset;
     }
 
     .meter {
@@ -401,7 +418,119 @@ const HOME_STYLES = `
     .meter .bar {
       height: 10px;
       background: linear-gradient(90deg, var(--brand), var(--accent));
-      width: 70%;
+      width: 100%;
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform .85s cubic-bezier(.2, .9, .3, 1);
+    }
+
+    .panel.in .bar {
+      transform: scaleX(var(--fill, .7));
+    }
+
+    .ask-ai {
+      margin-top: 1rem;
+    }
+
+    .ask-ai-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+      margin-bottom: .6rem;
+    }
+
+    .ask-ai-sub {
+      margin-bottom: .9rem;
+    }
+
+    .ask-ai-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .55rem;
+      margin-bottom: .9rem;
+    }
+
+    .chip.ask-chip {
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      --ui-lift-y: -1px;
+      --ui-lift-border: rgba(56, 208, 194, .34);
+      --ui-lift-shadow: 0 8px 16px rgba(0, 0, 0, .2);
+    }
+
+    .ask-ai-compose {
+      display: flex;
+      gap: .6rem;
+      align-items: center;
+      margin: 0 0 .9rem;
+    }
+
+    .ask-ai-compose input {
+      width: 100%;
+      padding: .72rem .85rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: var(--elev);
+      color: var(--text);
+      outline: none;
+    }
+
+    .ask-ai-compose input:focus {
+      border-color: rgba(56, 208, 194, .3);
+      box-shadow: 0 0 0 2px rgba(56, 208, 194, .14);
+    }
+
+    .ask-ai-thread {
+      display: grid;
+      gap: .55rem;
+    }
+
+    .msg {
+      border-radius: 12px;
+      padding: .65rem .75rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .msg.user {
+      border-color: rgba(122, 167, 255, .3);
+      background: rgba(122, 167, 255, .09);
+    }
+
+    .msg.assistant {
+      border-color: rgba(56, 208, 194, .25);
+    }
+
+    .msg-role {
+      display: inline-block;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+      opacity: .85;
+      margin-bottom: .2rem;
+    }
+
+    .msg p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .current-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .current-item h3 {
+      margin: 0 0 .35rem;
+      font-size: 1rem;
+    }
+
+    .current-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
     }
 
     /* CONTACT */
@@ -498,6 +627,10 @@ const HOME_STYLES = `
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .current-grid {
+        grid-template-columns: 1fr;
+      }
+
       .contact {
         grid-template-columns: 1fr;
       }
@@ -539,6 +672,20 @@ const HOME_STYLES = `
         grid-template-columns: 1fr;
       }
 
+      .ask-ai-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .ask-ai-compose {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .ask-ai-compose .button {
+        width: 100%;
+      }
+
       .logo-wall {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -567,7 +714,11 @@ const HOME_STYLES = `
 
       .button,
       .logo-item,
-      .profile-photo {
+      .profile-photo,
+      .panel,
+      .meter .bar,
+      .chip.ask-chip,
+      .ui-lift {
         transition: none !important;
       }
     }
@@ -739,6 +890,38 @@ export default function Home() {
                 </div>
               </div>
             </aside>
+          </div>
+        </section>
+
+        <section id="currently-building">
+          <div className="container">
+            <h2 data-animate>Currently Building</h2>
+            <p className="section-sub" data-animate style={{ transitionDelay: ".05s" }}>
+              Active product and engineering focus areas I&apos;m shipping right now.
+            </p>
+
+            <div className="current-grid">
+              <div className="panel current-item ui-lift" data-animate>
+                <h3>AI interaction systems @ StageKeep</h3>
+                <p>
+                  Conversational workflow surfaces that turn user intent into clear actions.
+                </p>
+              </div>
+
+              <div className="panel current-item ui-lift" data-animate style={{ transitionDelay: ".05s" }}>
+                <h3>Portfolio platform (this site)</h3>
+                <p>
+                  Evolving this portfolio into a product-quality interactive showcase with AI demos.
+                </p>
+              </div>
+
+              <div className="panel current-item ui-lift" data-animate style={{ transitionDelay: ".1s" }}>
+                <h3>Applied ML + frontend systems</h3>
+                <p>
+                  Building practical AI features with strong UX, performance, and reliability constraints.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1002,38 +1185,40 @@ export default function Home() {
             <h2 data-animate>Technical Skills</h2>
 
             <div className="skills">
-              <div className="panel" data-animate>
+              <div className="panel ui-lift" data-animate>
                 <strong>Python</strong>
                 <div className="meter" aria-label="Python proficiency meter">
-                  <div className="bar" style={{ width: "85%" }} />
+                  <div className="bar" style={{ "--fill": ".85" } as CSSProperties} />
                 </div>
                 <p className="section-sub">NumPy, Pandas, scikit-learn</p>
               </div>
 
               <div
-                className="panel"
+                className="panel ui-lift"
                 data-animate
                 style={{ transitionDelay: ".05s" }}
               >
                 <strong>Java</strong>
                 <div className="meter" aria-label="Java proficiency meter">
-                  <div className="bar" style={{ width: "70%" }} />
+                  <div className="bar" style={{ "--fill": ".70" } as CSSProperties} />
                 </div>
                 <p className="section-sub">OOP, algorithms, data structures</p>
               </div>
 
               <div
-                className="panel"
+                className="panel ui-lift"
                 data-animate
                 style={{ transitionDelay: ".1s" }}
               >
                 <strong>Web</strong>
                 <div className="meter" aria-label="Web proficiency meter">
-                  <div className="bar" style={{ width: "75%" }} />
+                  <div className="bar" style={{ "--fill": ".75" } as CSSProperties} />
                 </div>
                 <p className="section-sub">HTML, CSS, JavaScript, APIs</p>
               </div>
             </div>
+
+            <AskRjAi />
           </div>
         </section>
 
@@ -1042,7 +1227,7 @@ export default function Home() {
             <h2 data-animate>Contact Me</h2>
 
             <div className="contact">
-              <div className="panel" data-animate>
+              <div className="panel ui-lift" data-animate>
                 <form
                   action="https://formspree.io/f/mreepybw"
                   method="POST"
@@ -1101,7 +1286,7 @@ export default function Home() {
               </div>
 
               <div
-                className="panel photo-panel"
+                className="panel photo-panel ui-lift"
                 data-animate
                 style={{ transitionDelay: ".05s" }}
               >

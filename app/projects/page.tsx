@@ -237,6 +237,15 @@ const PROJECTS_STYLES = `
       flex: 1;
     }
 
+    .card-title {
+      margin: .2rem 0;
+    }
+
+    .card-desc {
+      min-height: 4.9rem;
+      margin: 0;
+    }
+
     .card-actions {
       margin-top: auto;
     }
@@ -273,6 +282,12 @@ const PROJECTS_STYLES = `
       font-weight: 700;
       font-size: .92rem;
       letter-spacing: .01em;
+      min-height: 3rem;
+    }
+
+    .card-tags {
+      min-height: 2.3rem;
+      align-content: flex-start;
     }
 
     .chip {
@@ -440,10 +455,10 @@ export default function ProjectsPage() {
                 />
               </div>
               <div className="card-content">
-                <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
+                <h2 className="card-title" style={{ fontSize: "1.2rem" }}>
                   Tic-Tac-Toe AI
                 </h2>
-                <p>
+                <p className="card-desc">
                   A browser-based implementation of a Tic-Tac-Toe AI originally
                   prototyped in Java and re-engineered in JavaScript for seamless
                   play directly in the browser.
@@ -451,7 +466,7 @@ export default function ProjectsPage() {
                 <p className="impact">
                   Perfect-play decision system responds instantly to every board state.
                 </p>
-                <div className="flex" aria-label="Tech stack">
+                <div className="flex card-tags" aria-label="Tech stack">
                   <span className="chip">
                     <i />
                     Java
@@ -488,10 +503,10 @@ export default function ProjectsPage() {
                 />
               </div>
               <div className="card-content">
-                <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
+                <h2 className="card-title" style={{ fontSize: "1.2rem" }}>
                   Flappy Bird AI
                 </h2>
-                <p>
+                <p className="card-desc">
                   A browser-based implementation of Flappy Bird using simple neural
                   networks and genetic algorithms that was originally prototyped in
                   Python.
@@ -499,7 +514,7 @@ export default function ProjectsPage() {
                 <p className="impact">
                   Neuroevolution agents learn to survive longer in real time.
                 </p>
-                <div className="flex" aria-label="Tech stack">
+                <div className="flex card-tags" aria-label="Tech stack">
                   <span className="chip">
                     <i />
                     Python
@@ -536,17 +551,17 @@ export default function ProjectsPage() {
                 />
               </div>
               <div className="card-content">
-                <h2 style={{ fontSize: "1.2rem", margin: ".2rem 0" }}>
+                <h2 className="card-title" style={{ fontSize: "1.2rem" }}>
                   Chapter Ops Dashboard v1.0
                 </h2>
-                <p>
+                <p className="card-desc">
                   A lightweight dashboard for managing chapter operations with
                   interactive tracking of members, dues, events, and tasks.
                 </p>
                 <p className="impact">
                   Interactive operations workflow centralizes chapter decision-making.
                 </p>
-                <div className="flex" aria-label="Tech stack">
+                <div className="flex card-tags" aria-label="Tech stack">
                   <span className="chip">
                     <i />
                     HTML
